@@ -99,4 +99,58 @@ public class bigt {
     }
 
 
+    public int getMapCnt() throws InvalidSlotNumberException, InvalidTupleSizeException, HFDiskMgrException,
+            HFBufMgrException, IOException {
+        int totalMapCount = 0;
+        for(int i = 1; i <= 5; i++){
+            totalMapCount += heapFiles.get(i).getRecCntMap();
+        }
+        return totalMapCount;
     }
+
+    public int getRowCnt()  throws Exception{
+        return getCount(3);
+    }
+
+    public int getColumnCnt()  throws Exception{
+        return getCount(4);
+    }
+
+    public int getCount(int orderType) throws Exception{
+        int numBuf = (int)((SystemDefs.JavabaseBM.getNumBuffers()*3)/4);
+//        CombinedStream stream = new CombinedStream(this, orderType,"*","*","*",numBuf);
+        Stream stream = new Stream(this.name, null, 1,  orderType, "*", "*", "*", numBuf);
+        Map t = stream.getNext();
+        int count = 0;
+        String temp = "\0";
+        while(t != null) {
+            t.setFldOffset(t.getMapByteArray());
+            if(orderType==3){
+                if(!t.getRowLabel().equals(temp)){
+                    temp = t.getRowLabel();
+                    count++;
+                }
+            }else{
+                if(!t.getColumnLabel().equals(temp)){
+                    temp = t.getColumnLabel();
+                    count++;
+                }
+            }
+            t = stream.getNext();
+        }
+        stream.closestream();
+        return count;
+    }
+
+
+    public MID insertMap(Map map, int type) throws HFDiskMgrException,
+            InvalidTupleSizeException, HFException, IOException, FieldNumberOutOfBoundException,
+            InvalidSlotNumberException, SpaceNotAvailableException, HFBufMgrException {
+        this.insertType = type;
+        MID mid = heapFiles.get(type).insertRecordMap(map.getMapByteArray());
+        return mid;
+    }
+
+
+
+}
