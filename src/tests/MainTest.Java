@@ -24,4 +24,7 @@ class MainTest implements GlobalConst {
         System.out.println("Press 8 to quit");
         System.out.println("------------------------ BigTable Tests --------------------------");
     }
-}
+
+    public static void main(String argv[]) {
+    }
+    }

@@ -22,7 +22,7 @@ DBTest:DBTest.java
 dbtest: DBTest
 	$(JAVA) tests.DBTest
 
-# test heapfile 
+# test heapfile
 
 HFTest:HFTest.java
 	$(JAVAC) TestDriver.java HFTest.java
@@ -72,4 +72,11 @@ sortmerge: SMJoin
 
 
 
+batch:BatchInsert.java
+	$(JAVAC) BatchInsert.java
 
+MainTest:MainTest.java
+	$(JAVAC) MainTest.java
+
+maintest: MainTest
+	$(JAVA) tests.MainTest

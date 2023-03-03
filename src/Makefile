@@ -4,7 +4,7 @@
 #the assignment to be generated
 
 JARFILES=bufmgr/*.class diskmgr/*.class global/*.class iterator/*.class\
-         heap/*.class chainexception/*.class  btree/*.class index/*.class tests/*.class
+         heap/*.class chainexception/*.class  btree/*.class index/*.class tests/*.class catalog/*.class BigT/*.class
 
 JDKPATH = $(JAVA_HOME)
 LIBPATH = .:..
@@ -17,7 +17,7 @@ DOCFILES=bufmgr diskmgr global chainexception heap btree iterator index
 
 ##############  update the above for each assignment in making
 
-ASSIGN=/home/candan/Courses/CSE510spr02/minjava/javaminibase/src
+ASSIGN=/Users/arjunreddy/javaminibase/src
 LIBDIR=$(ASSIGN)/lib
 KEY=$(ASSIGN)/key
 SRC=$(ASSIGN)/src
@@ -28,7 +28,7 @@ PACKAGEINDEX=$(ASSIGN)/javadoc
 JAVADOC=javadoc -public -d $(PACKAGEINDEX)
 
 ### Generate jar and javadoc files.  Apply to most assignments.
-db: 
+db:
 	make -C global
 	make -C chainexception
 	make -C btree
@@ -37,13 +37,16 @@ db:
 	make -C heap
 	make -C index
 	make -C iterator
-	
+	make -C BigT
+
 doc:
 	$(JAVADOC) $(DOCFILES)
 
-test: 
-	cd tests; make bmtest dbtest; whoami; make hftest bttest indextest jointest sorttest sortmerge
+test:
+	cd tests; make bmtest dbtest; whoami; make hftest bttest indextest jointest sorttest sortmerge mapunit
+
+main:
+	cd tests;  make maintest;
 
 clean:
 	\rm -f $(CLASSPATH)/*.class *~ \#* core $(JARFILES) TRACE
-
