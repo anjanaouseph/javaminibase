@@ -1,9 +1,11 @@
 package heap;
 
 import java.io.*;
+import java.util.*;
+import BigT.Map;
 import diskmgr.*;
-import bufmgr.*;
 import global.*;
+import iterator.MapUtils;
 
 /**  This heapfile implementation is directory-based. We maintain a
  *  directory of info about the data pages (which are of type HFPage
@@ -942,6 +944,12 @@ public class Heapfile implements Filetype,  GlobalConst {
       
       delete_file_entry( _fileName );
     }
+
+	/*–  boolean deleteMap(MID mid): Delete map from file with given mid.
+	* */
+	boolean deleteMap(MID mid){
+
+	}
   
   /**
    * short cut to access the pinPage function in bufmgr package.

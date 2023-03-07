@@ -116,6 +116,10 @@ public class bigt {
         return getCount(4);
     }
 
+    public void deleteBigt(){
+
+    }
+
     public int getCount(int orderType) throws Exception{
         int numBuf = (int)((SystemDefs.JavabaseBM.getNumBuffers()*3)/4);
 //        CombinedStream stream = new CombinedStream(this, orderType,"*","*","*",numBuf);
