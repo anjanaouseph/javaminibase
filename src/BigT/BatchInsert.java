@@ -6,5 +6,12 @@ public class BatchInsert {
         System.out.println("Index type : " + type);
         System.out.println("Table name : " + bigTable);
         System.out.println("Number of buffers : " + numbuf);
+
+
+        // TODO: Check if the file exists
+        // TODO: Check if the table exists
+
+        // TODO: Maybe a switch case with the index type
+        //
     }
 }
