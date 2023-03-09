@@ -1,5 +1,7 @@
 package tests;
 
+import BigT.BatchInsert;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -45,9 +47,28 @@ class MainTest {
         return choice;
     }
 
+    /**
+     * Reads the input for the choice from the user
+     * @return String[]
+     */
+    public static String[] getInput() {
+        BufferedReader in = new BufferedReader (new InputStreamReader(System.in));
+        try {
+            String inputFromUser = in.readLine();
+            // The input cmd is seperated by space.
+            return inputFromUser.split(" ");
+        } catch (Exception exception) {
+            System.out.println("Ran into an exception reading the input.");
+            exception.printStackTrace();
+        }
+
+        return null;
+    }
+
     public static void main(String argv[]) {
         int choice = -1;
         // We keep on giving the choice to user until the user choose option 8, which corresponds to Quit.
+        String[] input;
         while(choice != 8) {
             menu();
             try {
@@ -57,6 +78,14 @@ class MainTest {
                     case 1:
                         //batch insert
                         // TODO: Make changes for batch insert.
+                        System.out.println("FORMAT : batchinsert DATAFILENAME TYPE BIGTABLENAME NUMBUF");
+                        input = getInput();
+                        if (input != null && input.length == 5) {
+                            // TODO: May be check later and add conditons to check the values of input.
+                            new BatchInsert(input[1], Integer.parseInt(input[2]), input[3], Integer.parseInt(input[4]));
+                        } else {
+                            System.out.println("Improper input given. Try again !");
+                        }
                         break;
                     case 2:
                         // query
