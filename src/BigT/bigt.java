@@ -17,7 +17,6 @@ import java.util.*;
 public class bigt {
     private String name;
 
-    private Heapfile _hf;
     public ArrayList<Heapfile> heapFiles;
     public ArrayList<String> heapFileNames;
     public ArrayList<String> indexFileNames;
@@ -27,7 +26,7 @@ public class bigt {
     private AttrType[] attrType;
     private FldSpec[] projlist;
     private CondExpr[] expr;
-    MapIndexScan iscan;
+    MapIndexScan index_scan;
     private int insertType;
     short[] res_str_sizes = new short[]{Map.DEFAULT_ROW_LABEL_ATTRIBUTE_SIZE, Map.DEFAULT_STRING_ATTRIBUTE_SIZE, Map.DEFAULT_STRING_ATTRIBUTE_SIZE};
 
@@ -74,6 +73,15 @@ public class bigt {
     public void initExprs(){
 
     }
+
+    public void indexCreateUtil(){
+
+    }
+
+    public void createIndexUtil(){
+
+    }
+
     public String getName(){
         return name;
     }
@@ -122,7 +130,6 @@ public class bigt {
 
     public int getCount(int orderType) throws Exception{
         int numBuf = (int)((SystemDefs.JavabaseBM.getNumBuffers()*3)/4);
-//        CombinedStream stream = new CombinedStream(this, orderType,"*","*","*",numBuf);
         Stream stream = new Stream(this.name, null, 1,  orderType, "*", "*", "*", numBuf);
         Map t = stream.getNext();
         int count = 0;
@@ -153,6 +160,15 @@ public class bigt {
         this.insertType = type;
         MID mid = heapFiles.get(type).insertRecordMap(map.getMapByteArray());
         return mid;
+    }
+
+    public static Stream openStream(String filename,int orderType, String rowFilter, String columnFilter, String ValueFilter)  throws Exception, IOException, HFException, HFBufMgrException, HFDiskMgrException, InvalidSlotNumberException, SpaceNotAvailableException, InvalidTupleSizeException
+    {
+        return new Stream(filename,orderType,rowFilter,columnFilter,ValueFilter);
+    }
+
+    public void insertToMainIndex(){
+
     }
 
 
