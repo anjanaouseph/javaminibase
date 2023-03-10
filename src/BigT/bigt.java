@@ -19,6 +19,7 @@ public class bigt {
     public ArrayList<String> indexFileNames;
     public ArrayList<BTreeFile> indexFiles;
     public BTreeFile utilityIndex = null;
+    public Heapfile hf=null;
     public String indexUtil;
     private AttrType[] attrType;
     private FldSpec[] projlist;
@@ -532,6 +533,19 @@ public class bigt {
         }
 
 
+    }
+
+    public void deleteBigt(String name, int type)throws IOException, HFException, HFBufMgrException, HFDiskMgrException, InvalidSlotNumberException, SpaceNotAvailableException, InvalidTupleSizeException
+    {
+        try {
+            hf.deleteFile();
+            utilityIndex.destroyFile();
+        }
+
+        catch(Exception e)
+        {
+            System.exit(1);
+        }
     }
 
     public void createMapInsertIndex(int type){
