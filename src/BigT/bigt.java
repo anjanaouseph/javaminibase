@@ -2,7 +2,6 @@ package BigT;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import bufmgr.*;
 import global.*;
@@ -14,7 +13,7 @@ import java.util.*;
 
 public class bigt {
     private String name;
-
+    private int type;
     public ArrayList<Heapfile> heapFiles;
     public ArrayList<String> heapFileNames;
     public ArrayList<String> indexFileNames;
@@ -28,7 +27,7 @@ public class bigt {
     private int insertType;
     short[] res_str_sizes = new short[]{Map.DEFAULT_ROW_LABEL_ATTRIBUTE_SIZE, Map.DEFAULT_STRING_ATTRIBUTE_SIZE, Map.DEFAULT_STRING_ATTRIBUTE_SIZE};
 
-    public bigt(String name, boolean insert) throws HFException, HFBufMgrException, HFDiskMgrException, IOException,
+    public bigt(String name, int type) throws HFException, HFBufMgrException, HFDiskMgrException, IOException,
             GetFileEntryException, ConstructPageException, AddFileEntryException, btree.IteratorException,
             btree.UnpinPageException, btree.FreePageException, btree.DeleteFileEntryException, btree.PinPageException,
             PageUnpinnedException, InvalidFrameNumberException, HashEntryNotFoundException, ReplacerException {
@@ -38,6 +37,8 @@ public class bigt {
         heapFileNames = new ArrayList<>(6);
         indexFileNames = new ArrayList<>(6);
         this.name = name;
+        this.type = type;
+        boolean insert = (type ==1);
         heapFiles.add(null);
         heapFileNames.add("");
         indexFileNames.add("");
