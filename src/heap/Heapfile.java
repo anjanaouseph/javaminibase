@@ -601,6 +601,61 @@ public class Heapfile implements Filetype,  GlobalConst {
       return rid;
       
     }
+
+	/**
+	 * Return number of records in file.
+	 *
+	 * @throws InvalidSlotNumberException invalid slot number
+	 * @throws InvalidTupleSizeException  invalid tuple size
+	 * @throws HFBufMgrException          exception thrown from bufmgr layer
+	 * @throws HFDiskMgrException         exception thrown from diskmgr layer
+	 * @throws IOException                I/O errors
+	 */
+	public int getRecCntMap()
+			throws InvalidSlotNumberException,
+			InvalidTupleSizeException,
+			HFDiskMgrException,
+			HFBufMgrException,
+			IOException {
+		int answer = 0;
+		PageId currentDirPageId = new PageId(_firstDirPageId.pid);
+
+		PageId nextDirPageId = new PageId(0);
+
+		HFPage currentDirPage = new HFPage();
+		Page pageinbuffer = new Page();
+
+		while (currentDirPageId.pid != INVALID_PAGE) {
+			pinPage(currentDirPageId, currentDirPage, false);
+
+			MID mid = new MID();
+			Map amap;
+			for (mid = currentDirPage.firstRecord();
+				 mid != null;    // mid==NULL means no more record
+				 mid = currentDirPage.nextRecord(mid)) {
+				amap = currentDirPage.getMapRecord(mid);
+				DataPageInfo dpinfo = new DataPageInfo(amap);
+
+				answer += dpinfo.recct;
+			}
+
+			// ASSERTIONS: no more record
+			// - we have read all datapage records on
+			//   the current directory page.
+
+			nextDirPageId = currentDirPage.getNextPage();
+			unpinPage(currentDirPageId, false /*undirty*/);
+			currentDirPageId.pid = nextDirPageId.pid;
+		}
+
+		// ASSERTIONS:
+		// - if error, exceptions
+		// - if end of heapfile reached: currentDirPageId == INVALID_PAGE
+		// - if not yet end of heapfile: currentDirPageId valid
+
+
+		return answer;
+	}
   
   /** Delete record from file with given rid.
    *
