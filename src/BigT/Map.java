@@ -60,10 +60,9 @@ public class Map implements GlobalConst {
         map_length = size;
     }
 
-    public Map(byte[] amap, int offset, int len) {
+    public Map(byte[] amap, int offset) {
         this.data = amap;
         this.map_offset = offset;
-        this.map_length = len;
     }
 
     public void setHdr(short numFlds, AttrType types[], short strSizes[]) throws IOException, InvalidTupleSizeException {
@@ -204,10 +203,9 @@ public class Map implements GlobalConst {
         return data;
     }
 
-    public void mapInit(byte[] amap, int offset, int len) {
+    public void mapInit(byte[] amap, int offset) {
         this.data = amap;
         this.map_offset = offset;
-        this.map_length = len;
     }
 
     public void mapSet(byte[] frommap, int offset, int len) {
