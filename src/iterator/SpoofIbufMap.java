@@ -1,5 +1,6 @@
 package iterator;
 
+import BigT.Map;
 import heap.*;
 import global.*;
 import diskmgr.*;
@@ -7,12 +8,12 @@ import bufmgr.*;
 
 import java.io.*;
 
-public class SpoofIbuf implements GlobalConst {
+public class SpoofIbufMap implements GlobalConst {
 
     /**
      * constructor, use the init to initialize
      */
-    public void SpoofIbuf() {
+    public void SpoofIbufMap() {
 
         hf_scan = null;
     }
@@ -24,14 +25,14 @@ public class SpoofIbuf implements GlobalConst {
      *
      * @param bufs[][] the I/O buffer
      * @param n_pages  the numbers of page of this buffer
-     * @param tSize    the tuple size
+     * @param tSize    the map size
      * @param fd       the reference to an Heapfile
-     * @param Ntuples  the tuple numbers of the page
+     * @param Ntuples  the map numbers of the page
      * @throws IOException some I/O fault
      * @throws Exception   other exceptions
      */
     public void init(Heapfile fd, byte bufs[][], int n_pages,
-                     int tSize, int Ntuples)
+                     int tSize, int Nmaps)
             throws IOException,
             Exception {
         _fd = fd;
@@ -48,13 +49,13 @@ public class SpoofIbuf implements GlobalConst {
         t_per_pg = MINIBASE_PAGESIZE / t_size;
 
 
-        n_tuples = Ntuples;
+        n_maps = Nmaps;
 
         // open a scan
         if (hf_scan != null) hf_scan = null;
 
         try {
-            hf_scan = _fd.openScanTuple();
+            hf_scan = _fd.openScanMap();
         } catch (Exception e) {
             throw e;
         }
@@ -63,16 +64,16 @@ public class SpoofIbuf implements GlobalConst {
     }
 
     /**
-     * get a tuple from current buffer,pass reference buf to this method
-     * usage:temp_tuple = tuple.Get(buf);
+     * get a map from current buffer,pass reference buf to this method
+     * usage:temp_map = map.Get(buf);
      *
      * @param buf write the result to buf
      * @return the result tuple
      * @throws IOException some I/O fault
      * @throws Exception   other exceptions
      */
-    public Tuple Get(Tuple buf) throws IOException, Exception {
-        if (tot_t_proc == n_tuples) done = true;
+    public Map Get(Map buf) throws IOException, Exception {
+        if (tot_t_proc == n_maps) done = true;
 
         if (done == true) {
             buf = null;
@@ -96,7 +97,7 @@ public class SpoofIbuf implements GlobalConst {
             return null;
         }
 
-        buf.tupleSet(_bufs[curr_page], t_rd_from_pg * t_size, t_size);
+        buf.mapSet(_bufs[curr_page], t_rd_from_pg * t_size, t_size);
         tot_t_proc++;
 
         // Setup for next read
@@ -114,18 +115,18 @@ public class SpoofIbuf implements GlobalConst {
      * @return if the buffer is empty,return true. otherwise false
      */
     public boolean empty() {
-        if (tot_t_proc == n_tuples) done = true;
+        if (tot_t_proc == n_maps) done = true;
         return done;
     }
 
     /**
-     * @return the numbers of tuples in the buffer
+     * @return the numbers of maps in the buffer
      * @throws IOException               some I/O fault
      * @throws InvalidTupleSizeException Heapfile error
      */
     private int readin() throws IOException, InvalidTupleSizeException {
         int t_read = 0, tot_read = 0;
-        Tuple t = new Tuple();
+        Map t = new Map();
         byte[] t_copy;
 
         curr_page = 0;
@@ -133,8 +134,8 @@ public class SpoofIbuf implements GlobalConst {
             while (t_read < t_per_pg) {
                 MID mid = new MID();
                 try {
-                    if ((t = hf_scan.getNextTuple(mid)) == null) return tot_read;
-                    t_copy = t.getTupleByteArray();
+                    if ((t = hf_scan.getNextMap(mid)) == null) return tot_read;
+                    t_copy = t.getMapByteArray();
                     System.arraycopy(t_copy, 0, _bufs[curr_page], t_read * t_size, t_size);
                 } catch (Exception e) {
                     System.err.println("" + e);
@@ -163,7 +164,7 @@ public class SpoofIbuf implements GlobalConst {
     private int t_rd_from_pg, curr_page;
     private int t_per_pg;
     private boolean done;
-    private int n_tuples;
+    private int n_maps;
 }
 
 

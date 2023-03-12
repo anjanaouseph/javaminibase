@@ -1,5 +1,6 @@
 package iterator;
 
+import BigT.Map;
 import heap.*;
 import global.*;
 import bufmgr.*;
@@ -8,17 +9,17 @@ import diskmgr.*;
 import java.io.*;
 
 /**
- * O_buf::Put takes tuples and stores them on the buffer pages that
+ * O_buf::Put takes maps and stores them on the buffer pages that
  * were passed to O_buf::init.  O_buf::flush inserts them enmass into
  * a temporary HeapFile.
  */
-public class OBuf implements GlobalConst {
+public class OBufMap implements GlobalConst {
 
     /**
      * fault constructor
      * no args -- use init to initialize
      */
-    public OBuf() {
+    public OBufMap() {
     }
 
 
@@ -27,7 +28,7 @@ public class OBuf implements GlobalConst {
      *
      * @param bufs    temporary buffer to pages.(EACH ELEMENT IS A SINGLE BUFFER PAGE).
      * @param n_pages the number of pages
-     * @param tSize   tuple size
+     * @param tSize   map size
      * @param temp_fd fd of a  HeapFile
      * @param buffer  true => it is used as a buffer => if it is flushed, print
      *                a nasty message. it is false by default.
@@ -50,21 +51,21 @@ public class OBuf implements GlobalConst {
     }
 
     /**
-     * Writes a tuple to the output buffer
+     * Writes a map to the output buffer
      *
-     * @param buf the tuple written to buffer
-     * @return the position of tuple which is in buffer
+     * @param buf the map written to buffer
+     * @return the position of map which is in buffer
      * @throws IOException some I/O fault
      * @throws Exception   other exceptions
      */
-    public Tuple Put(Tuple buf)
+    public Map Put(Map buf)
             throws IOException,
             Exception {
 
         byte[] copybuf;
-        copybuf = buf.getTupleByteArray();
+        copybuf = buf.getMapByteArray();
         System.arraycopy(copybuf, 0, _bufs[curr_page], t_wr_to_pg * t_size, t_size);
-        Tuple tuple_ptr = new Tuple(_bufs[curr_page], t_wr_to_pg * t_size, t_size);
+        Map map_ptr = new Map(_bufs[curr_page], t_wr_to_pg * t_size, t_size);
 
         t_written++;
         t_wr_to_pg++;
@@ -83,13 +84,13 @@ public class OBuf implements GlobalConst {
             curr_page++;
         }
 
-        return tuple_ptr;
+        return map_ptr;
     }
 
     /**
-     * returns the # of tuples written.
+     * returns the # of maps written.
      *
-     * @return the numbers of tuples written
+     * @return the numbers of maps written
      * @throws IOException some I/O fault
      * @throws Exception   other exceptions
      */
@@ -103,13 +104,13 @@ public class OBuf implements GlobalConst {
         if (dirty) {
             for (count = 0; count <= curr_page; count++) {
                 MID mid;
-                // Will have to go thru entire buffer writing tuples to disk
+                // Will have to go thru entire buffer writing maps to disk
 
                 if (count == curr_page)
                     for (int i = 0; i < t_wr_to_pg; i++) {
                         System.arraycopy(_bufs[count], t_size * i, tempbuf, 0, t_size);
                         try {
-                            mid = _temp_fd.insertRecordTuple(tempbuf);
+                            mid = _temp_fd.insertRecordMap(tempbuf);
                         } catch (Exception e) {
                             throw e;
                         }
@@ -118,7 +119,7 @@ public class OBuf implements GlobalConst {
                     for (int i = 0; i < t_per_pg; i++) {
                         System.arraycopy(_bufs[count], t_size * i, tempbuf, 0, t_size);
                         try {
-                            mid = _temp_fd.insertRecordTuple(tempbuf);
+                            mid = _temp_fd.insertRecordMap(tempbuf);
                         } catch (Exception e) {
                             throw e;
                         }
@@ -132,15 +133,15 @@ public class OBuf implements GlobalConst {
     }
 
     private boolean dirty;                                // Does this buffer contain dirty pages?
-    private int t_per_pg,                        // # of tuples that fit in 1 page
-            t_in_buf;                        // # of tuples that fit in the buffer
-    private int t_wr_to_pg,                        // # of tuples written to current page
-            t_wr_to_buf;                        // # of tuples written to buffer.
+    private int t_per_pg,                        // # of maps that fit in 1 page
+            t_in_buf;                        // # of maps that fit in the buffer
+    private int t_wr_to_pg,                        // # of maps written to current page
+            t_wr_to_buf;                        // # of maps written to buffer.
     private int curr_page;                        // Current page being written to.
     private byte[][] _bufs;                        // Array of pointers to buffer pages.
     private int _n_pages;                        // number of pages in array
-    private int t_size;                                // Size of a tuple
-    private long t_written;                        // # of tuples written so far.
+    private int t_size;                                // Size of a map
+    private long t_written;                        // # of maps written so far.
     private int TEST_temp_fd;                        // fd of a temporary file
     private Heapfile _temp_fd;
     private boolean buffer_only;

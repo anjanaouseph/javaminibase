@@ -20,8 +20,8 @@ public class Stream {
     CondExpr[] index_4_filter;
     CondExpr[] index_5_filter;
 
-    public Stream(String bigtName, int indexType, int orderType, String rowFilter, String columnFilter, String valueFilter, int numBuf) {
-        this.indexType = indexType;
+    public Stream(String bigtName, int orderType, String rowFilter, String columnFilter, String valueFilter, int numBuf) {
+        //this.indexType = indexType;
         this.orderType = orderType;
         this.numBuf = numBuf;
         List<CondExpr> exprs = new ArrayList<CondExpr>();
