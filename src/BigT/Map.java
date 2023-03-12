@@ -60,6 +60,10 @@ public class Map implements GlobalConst {
         map_length = size;
     }
 
+    public Map(byte[] amap, int offset) {
+        this.data = amap;
+        this.map_offset = offset;
+    }
     public Map(byte[] amap, int offset, int len) {
         this.data = amap;
         this.map_offset = offset;
@@ -202,6 +206,11 @@ public class Map implements GlobalConst {
 
     public byte[] returnMapByteArray() {
         return data;
+    }
+
+    public void mapInit(byte[] amap, int offset) {
+        this.data = amap;
+        this.map_offset = offset;
     }
 
     public void mapInit(byte[] amap, int offset, int len) {
