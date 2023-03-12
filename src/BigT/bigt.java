@@ -245,7 +245,7 @@ public class bigt {
 
     public int getCount(int orderType) throws Exception{
         int numBuf = (int)((SystemDefs.JavabaseBM.getNumBuffers()*3)/4);
-        Stream stream = new Stream(this.name, null, 1,  orderType, "*", "*", "*", numBuf);
+        Stream stream = new Stream(this.name, 1,  "*", "*", "*", numBuf);
         Map t = stream.getNext();
         int count = 0;
         String temp = "\0";
@@ -437,7 +437,7 @@ public class bigt {
     }
 
     public Stream openStream(String bigTableName, int orderType, String rowFilter, String columnFilter, String valueFilter, int numBuf) {
-        Stream stream = new Stream(bigTableName, null, 2, orderType, rowFilter, columnFilter, valueFilter, numBuf);
+        Stream stream = new Stream(bigTableName, 2, rowFilter, columnFilter, valueFilter, numBuf);
         return stream;
     }
 
@@ -468,7 +468,7 @@ public class bigt {
     public void deleteBigt(String name, int type)throws IOException, HFException, HFBufMgrException, HFDiskMgrException, InvalidSlotNumberException, SpaceNotAvailableException, InvalidTupleSizeException
     {
         try {
-            hf.deleteFile();
+            hf.deleteFileMap();
             utilityIndex.destroyFile();
         }
 
