@@ -6,7 +6,7 @@ import catalog.*;
 
 public class SystemDefs {
   public static BufMgr	JavabaseBM;
-  public static DB	JavabaseDB;
+  public static bigDB JavabaseDB;
   public static Catalog	JavabaseCatalog;
   
   public static String  JavabaseDBName;
@@ -54,7 +54,7 @@ public class SystemDefs {
       
       try {
 	JavabaseBM = new BufMgr(bufpoolsize, replacement_policy);
-	JavabaseDB = new DB();
+	JavabaseDB = new bigDB();
 /*
 	JavabaseCatalog = new Catalog(); 
 */
@@ -73,7 +73,7 @@ public class SystemDefs {
       
       if ((MINIBASE_RESTART_FLAG)||(num_pgs == 0)){//open an existing database
 	try {
-	  JavabaseDB.openDB(dbname);
+	  JavabaseDB.openBigDB(dbname);
 	}
 	catch (Exception e) {
 	  System.err.println (""+e);
@@ -83,7 +83,7 @@ public class SystemDefs {
       } 
       else {
 	try {
-	  JavabaseDB.openDB(dbname, num_pgs);
+	  JavabaseDB.openBigDB(dbname, num_pgs);
 	  JavabaseBM.flushAllPages();
 	}
 	catch (Exception e) {
