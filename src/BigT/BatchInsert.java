@@ -23,7 +23,7 @@ public class BatchInsert {
         try {
             // TODO: Remove this later
             String dbpath = "/tmp/batch-insert"+System.getProperty("user.name")+".minibase-db";
-            SystemDefs sysdef = new SystemDefs( dbpath, 1000, numbuf, "Clock" );
+            SystemDefs sysdef = new SystemDefs( dbpath, 100000, numbuf/2, "Clock" );
 
             // Calling the constructor with the data
             bigt table = new bigt(bigTableName, type);
@@ -51,6 +51,14 @@ public class BatchInsert {
                 table.insertMap(map, type);
 
                 System.out.println("Inserted record " + recordNum);
+            }
+
+            // Reading the data inserted
+            Stream stream = table.openStream(bigTableName, 2, "*", "*", "*", numbuf/2);
+            Map map = stream.getNext();
+            while (map != null) {
+                System.out.println(map.getValue());
+                map = stream.getNext();
             }
         } catch (Exception exception) {
             exception.printStackTrace();
