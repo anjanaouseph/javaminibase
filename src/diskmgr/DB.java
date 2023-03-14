@@ -6,6 +6,7 @@ import java.io.*;
 import bufmgr.*;
 import global.*;
 
+// TODO: Ask A
 public class DB implements GlobalConst {
 
   

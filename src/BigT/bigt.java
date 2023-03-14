@@ -35,20 +35,24 @@ public class bigt {
         String fileName = "";
         heapFiles = new ArrayList<>(6);
         indexFiles = new ArrayList<>(6);
+
         heapFileNames = new ArrayList<>(6);
         indexFileNames = new ArrayList<>(6);
         this.name = name;
         this.type = type;
+        // TODO: Ask A : Is this default index type ?
         boolean insert = (type ==1);
         heapFiles.add(null);
         heapFileNames.add("");
         indexFileNames.add("");
+        // TODO: Ask A : Why 5 ?
         for(int i = 1; i <= 5; i++){
             heapFileNames.add(name + "_" + i);
             indexFileNames.add(name + "_index_" + i);
             heapFiles.add(new Heapfile(heapFileNames.get(i)));
         }
 
+        // TODO: Ask A : What is index util ?
         indexUtil = name + "_" + "indexUtil";
 
         if(insert){
@@ -58,6 +62,7 @@ public class bigt {
             createIndexUtil();
 
             try {
+                // TODO: Ask A : Why delete ?
                 deleteAllNodesInIndex(utilityIndex);
                 for(int i=2; i<=5; i++) {
                     deleteAllNodesInIndex(indexFiles.get(i));
@@ -148,16 +153,20 @@ public class bigt {
             case 1:
                 break;
             case 2:
+                // Index type 2
                 tempIndex = new BTreeFile(indexName1, AttrType.attrString, Map.DEFAULT_ROW_LABEL_ATTRIBUTE_SIZE, DeleteFashion.NAIVE_DELETE);
                 break;
             case 3:
+                // Index type 3
                 tempIndex = new BTreeFile(indexName1, AttrType.attrString, Map.DEFAULT_STRING_ATTRIBUTE_SIZE, DeleteFashion.NAIVE_DELETE);
                 break;
             case 4:
+                // Index type 4
                 tempIndex = new BTreeFile(indexName1, AttrType.attrString,
                         Map.DEFAULT_ROW_LABEL_ATTRIBUTE_SIZE + Map.DEFAULT_STRING_ATTRIBUTE_SIZE + 5, DeleteFashion.NAIVE_DELETE);
                 break;
             case 5:
+                // Index type 4
                 tempIndex = new BTreeFile(indexName1, AttrType.attrString,
                         Map.DEFAULT_ROW_LABEL_ATTRIBUTE_SIZE + Map.DEFAULT_STRING_ATTRIBUTE_SIZE + 5, DeleteFashion.NAIVE_DELETE);
                 break;
@@ -269,9 +278,11 @@ public class bigt {
     }
 
 
+    // TODO: Ask A : Do we need type here ?
     public MID insertMap(Map map, int type) throws HFDiskMgrException,
             InvalidTupleSizeException, HFException, IOException, FieldNumberOutOfBoundException,
             InvalidSlotNumberException, SpaceNotAvailableException, HFBufMgrException {
+        // TODO: Ask A - MID insertMap(byte[] mapPtr) Insert map into the big table, return its Mid. The insertMap() method ensures that there are at most three maps with the same row and column la- bels, but different timestamps, in the bigtable. When a fourth is inserted, the one with the oldest label is dropped from the big table.
         this.insertType = type;
         MID mid = heapFiles.get(type).insertRecordMap(map.getMapByteArray());
         return mid;
@@ -465,6 +476,18 @@ public class bigt {
 
     }
 
+    /**
+     * Deletes the Big table
+     * @param name
+     * @param type
+     * @throws IOException
+     * @throws HFException
+     * @throws HFBufMgrException
+     * @throws HFDiskMgrException
+     * @throws InvalidSlotNumberException
+     * @throws SpaceNotAvailableException
+     * @throws InvalidTupleSizeException
+     */
     public void deleteBigt(String name, int type)throws IOException, HFException, HFBufMgrException, HFDiskMgrException, InvalidSlotNumberException, SpaceNotAvailableException, InvalidTupleSizeException
     {
         try {
