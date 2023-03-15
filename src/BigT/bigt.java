@@ -43,6 +43,7 @@ public class bigt {
         // TODO: Ask A : Is this default index type ?
         boolean insert = (type ==1);
         heapFiles.add(null);
+        indexFiles.add(null);
         heapFileNames.add("");
         indexFileNames.add("");
         // TODO: Ask A : Why 5 ?
@@ -50,6 +51,7 @@ public class bigt {
             heapFileNames.add(name + "_" + i);
             indexFileNames.add(name + "_index_" + i);
             heapFiles.add(new Heapfile(heapFileNames.get(i)));
+            indexFiles.add(this.createIndex(indexFileNames.get(i), i));
         }
 
         // TODO: Ask A : What is index util ?
@@ -282,7 +284,9 @@ public class bigt {
     public MID insertMap(Map map, int type) throws HFDiskMgrException,
             InvalidTupleSizeException, HFException, IOException, FieldNumberOutOfBoundException,
             InvalidSlotNumberException, SpaceNotAvailableException, HFBufMgrException {
-        // TODO: Ask A - MID insertMap(byte[] mapPtr) Insert map into the big table, return its Mid. The insertMap() method ensures that there are at most three maps with the same row and column la- bels, but different timestamps, in the bigtable. When a fourth is inserted, the one with the oldest label is dropped from the big table.
+        // TODO: Ask A - MID insertMap(byte[] mapPtr) Insert map into the big table, return its Mid.
+        //  The insertMap() method ensures that there are at most three maps with the same row and column labels, but different timestamps, in the bigtable.
+        //  When a fourth is inserted, the one with the oldest label is dropped from the big table.
         this.insertType = type;
         MID mid = heapFiles.get(type).insertRecordMap(map.getMapByteArray());
         return mid;
@@ -448,7 +452,7 @@ public class bigt {
     }
 
     public Stream openStream(String bigTableName, int orderType, String rowFilter, String columnFilter, String valueFilter, int numBuf) {
-        Stream stream = new Stream(bigTableName, 2, rowFilter, columnFilter, valueFilter, numBuf);
+        Stream stream = new Stream(bigTableName, orderType, rowFilter, columnFilter, valueFilter, numBuf);
         return stream;
     }
 

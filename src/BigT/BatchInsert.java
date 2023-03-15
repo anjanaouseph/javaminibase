@@ -1,5 +1,7 @@
 package BigT;
 
+import diskmgr.PCounter;
+import global.MID;
 import global.SystemDefs;
 
 import java.nio.file.Files;
@@ -21,9 +23,9 @@ public class BatchInsert {
         // TODO: Maybe a switch case with the index type
 
         try {
-            // TODO: Remove this later
+            // TODO: Change the name of the data base.
             String dbpath = "/tmp/batch-insert"+System.getProperty("user.name")+".minibase-db";
-            SystemDefs sysdef = new SystemDefs( dbpath, 100000, numbuf/2, "Clock" );
+            SystemDefs sysdef = new SystemDefs( dbpath, 10000, numbuf/2, "Clock" );
 
             // Calling the constructor with the data
             bigt table = new bigt(bigTableName, type);
@@ -48,16 +50,21 @@ public class BatchInsert {
                 map.setTimeStamp(Integer.parseInt(row[2]));
                 map.setValue(row[3]);
 
-                table.insertMap(map, type);
+                MID mid = table.insertMap(map, type);
+                table.insertIndex(mid, map, type);
 
-                System.out.println("Inserted record " + recordNum);
+//                System.out.println("Inserted record " + recordNum);
             }
 
+            System.out.println("READ COUNT : " + PCounter.rCounter);
+            System.out.println("WRITE COUNT : " + PCounter.wCounter);
+
+            // TODO ask TA : When would the buffer be freed ?
             // Reading the data inserted
-            Stream stream = table.openStream(bigTableName, 2, "*", "*", "*", numbuf/2);
+            Stream stream = table.openStream(bigTableName, type, "*", "*", "*", numbuf/4);
             Map map = stream.getNext();
             while (map != null) {
-                System.out.println(map.getValue());
+//                System.out.println("---" + map.getValue());
                 map = stream.getNext();
             }
         } catch (Exception exception) {
