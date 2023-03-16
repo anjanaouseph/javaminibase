@@ -202,7 +202,7 @@ ExtendedSystemDefs.MINIBASE_RELCAT.getInfo(relation, relRec);
 
 
 // INSERT INTO DATAFILE
-//	heap.insertRecord(tuple.getTupleByteArray());
+	heap.insertRecord(tuple.getTupleByteArray());
 
 // NOW INSERT INTO EACH INDEX FOR RELATION
 
@@ -258,7 +258,7 @@ ExtendedSystemDefs.MINIBASE_RELCAT.getInfo(relation, relRec);
 		btree = new BTreeFile(indexName);
 		if (btree == null)
 		  throw new Catalognomem(null, "Catalog: No Enough Memory!");
-//           	btree.insert(key,rid);
+           	btree.insert(key,rid);
            } 
 	   catch (Exception e1) {
 	     throw e1;
@@ -276,7 +276,7 @@ ExtendedSystemDefs.MINIBASE_RELCAT.getInfo(relation, relRec);
 
  // LOADS INDEXES
  void loadIndexesUT(Tuple tuple, int attrCnt, int indexCnt,
-     AttrDesc [] attrs, IndexDesc [] indexes, String [] iFiles, RID rid ){};
+     AttrDesc [] attrs, IndexDesc [] indexes, void [] iFiles, RID rid ){};
 
 //-------------------------------
 // TYPECHECK INTS

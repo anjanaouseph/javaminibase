@@ -112,7 +112,7 @@ public class IndexCatalog extends Heapfile
       // OPEN SCAN
       
       try {
-	pscan = new Scan(this, false);
+	pscan = new Scan(this);
       }
       catch (Exception e) {
 	throw new IndexCatalogException(e,"scan() failed");
@@ -129,7 +129,7 @@ public class IndexCatalog extends Heapfile
       while(true) 
 	{
 	  try {
-//	    tuple = pscan.getNext(rid);
+	    tuple = pscan.getNext(rid);
 	    if (tuple == null) 
 	      throw new Catalogindexnotfound(null,
 					     "Catalog: Index not Found!");
@@ -170,7 +170,7 @@ public class IndexCatalog extends Heapfile
       // OPEN SCAN
       
       try {
-	pscan = new Scan(this, false);
+	pscan = new Scan(this);
       }
       catch (IOException e) {
 	System.err.println ("Scan"+e);
@@ -186,7 +186,7 @@ public class IndexCatalog extends Heapfile
       while (true)
 	{
 	  try {
-//	    tuple = pscan.getNext(rid);
+	    tuple = pscan.getNext(rid);
 	    if (tuple == null)
 	      throw new Catalogattrnotfound(null,"Catalog: Attribute not Found!");
 	    read_tuple(tuple, record);
@@ -253,7 +253,7 @@ public class IndexCatalog extends Heapfile
       // OPEN SCAN
       
       try {
-	pscan = new Scan(this, false);
+	pscan = new Scan(this);
       }
       catch (Exception e) {
 	throw new IndexCatalogException(e,"scan failed");
@@ -270,7 +270,7 @@ public class IndexCatalog extends Heapfile
       while(true) 
 	{
 	  try {
-//	    tuple = pscan.getNext(rid);
+	    tuple = pscan.getNext(rid);
 	    if (tuple == null) 
 	      throw new Catalogindexnotfound(null,
 					     "Catalog: Index not Found!");
@@ -341,7 +341,7 @@ public class IndexCatalog extends Heapfile
       }
       
       try {
-//	insertRecord(tuple.getTupleByteArray());
+	insertRecord(tuple.getTupleByteArray());
       }
       catch (Exception e) {
 	throw new IndexCatalogException(e, "insertRecord() failed");
@@ -366,7 +366,7 @@ public class IndexCatalog extends Heapfile
       
       // OPEN SCAN
       try {
-	pscan = new Scan(this, false);
+	pscan = new Scan(this);
       }
       catch (Exception e) {
 	throw new IndexCatalogException(e,"scan failed");
@@ -377,7 +377,7 @@ public class IndexCatalog extends Heapfile
       while (true)
 	{
 	  try {
-//	    tuple = pscan.getNext(rid);
+	    tuple = pscan.getNext(rid);
 	    if (tuple == null) 
 	      throw new Catalogattrnotfound(null,
 					    "Catalog: Attribute not Found!");
@@ -392,7 +392,7 @@ public class IndexCatalog extends Heapfile
 	     && (record.accessType == accessType))
 	    {
 	      try {
-//		deleteRecord(rid);  //  FOUND -  DELETE
+		deleteRecord(rid);  //  FOUND -  DELETE        
 	      }
 	      catch (Exception e){
 		throw new IndexCatalogException(e, "deleteRecord() failed");
@@ -543,7 +543,7 @@ public class IndexCatalog extends Heapfile
       }
       
       try {
-//	pscan = datafile.openScan();
+	pscan = datafile.openScan();
       }
       catch (Exception e) {
 	throw new IndexCatalogException(e,"openScan() failed");
@@ -577,7 +577,7 @@ public class IndexCatalog extends Heapfile
       
       while(true) {
 	try {
-//	  tuple = pscan.getNext(rid);
+	  tuple = pscan.getNext(rid);
 	  if (tuple == null) 
 	    return;
 	}
@@ -607,7 +607,7 @@ public class IndexCatalog extends Heapfile
 	
 	if (accessType.indexType == IndexType.B_Index) {
 	  try {
-//	    btree.insert(key, rid);
+	    btree.insert(key, rid); 
 	  }
 	  catch (Exception e) {
 	    throw new IndexCatalogException(e, "insert failed");	
