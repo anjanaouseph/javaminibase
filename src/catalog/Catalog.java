@@ -252,7 +252,7 @@ public class Catalog
     throws CatalogException
     {
       try {
-	Scan relscan = new Scan(relCat);
+	Scan relscan = new Scan(relCat, false);
       }
       catch (Exception e1) {
 	throw new CatalogException (e1, "scan failed");

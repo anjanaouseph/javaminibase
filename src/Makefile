@@ -6,7 +6,7 @@
 JARFILES=bufmgr/*.class diskmgr/*.class global/*.class iterator/*.class\
          heap/*.class chainexception/*.class  btree/*.class index/*.class tests/*.class catalog/*.class BigT/*.class
 
-JDKPATH = $(JAVA_HOME)
+JDKPATH = /usr
 LIBPATH = .:..
 CLASSPATH = $(LIBPATH)
 BINPATH = $(JDKPATH)/bin
@@ -17,7 +17,7 @@ DOCFILES=bufmgr diskmgr global chainexception heap btree iterator index
 
 ##############  update the above for each assignment in making
 
-ASSIGN=/Users/arjunreddy/javaminibase/src
+ASSIGN=/Users/lowkya/Desktop/ASU/CS510/javaminibase/src
 LIBDIR=$(ASSIGN)/lib
 KEY=$(ASSIGN)/key
 SRC=$(ASSIGN)/src
@@ -39,8 +39,8 @@ db:
 	make -C iterator
 	make -C BigT
 
-doc:
-	$(JAVADOC) $(DOCFILES)
+#doc:
+#	$(JAVADOC) $(DOCFILES)
 
 test:
 	cd tests; make bmtest dbtest; whoami; make hftest bttest indextest jointest sorttest sortmerge mapunit
