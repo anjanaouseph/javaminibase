@@ -11,6 +11,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BatchInsert {
+
+    /**
+     * Constructor
+     * @param datafile Path to the data file
+     * @param type Index type
+     * @param bigTableName Name of the table to be created or retrieved
+     * @param numbuf Number of buffers to be used.
+     */
     public BatchInsert(String datafile, int type,  String bigTableName, int numbuf) {
         System.out.println("Starting to read from the data file : " + datafile);
         System.out.println("Index type : " + type);
@@ -46,7 +54,7 @@ public class BatchInsert {
             for (String[] row : rows) {
                 recordNum++;
                 // reading each row
-                if (row.length < 4 || row.length > 4) {
+                if (row.length != 4) {
                     throw new Exception("Excepted row length 4.");
                 }
 
