@@ -1,13 +1,11 @@
 package tests;
 
-import BigT.BatchInsert;
-import BigT.Map;
-import BigT.Stream;
-import BigT.bigt;
+import BigT.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 class MainTest {
 
@@ -95,13 +93,8 @@ class MainTest {
                         System.out.println("FORMAT : query BIGTABLENAME ORDERTYPE ROWFILTER COLUMNFILTER VALUEFILTER NUMBUF");
                         input = getInput();
                         if (input != null && input.length == 7) {
-                            Stream stream = new bigt(input[1],Integer.parseInt(input[2])).openStream(input[1], Integer.parseInt(input[2]), input[3], input[4], input[5], Integer.parseInt(input[6])/4);
+                            new Query(input[1],Integer.parseInt(input[2]),input[3],input[4],input[5],Integer.parseInt(input[6])/4);
 
-                            Map map = stream.getNext();
-                            while (map != null) {
-//                System.out.println("---" + map.getValue());
-                                map = stream.getNext();
-                            }
                         } else {
                             System.out.println("Improper input given. Try again !");
                         }
