@@ -52,7 +52,7 @@ public class BatchInsert {
                 // Remove the UTF-8 BOM character from the first line
                 lines.set(0, lines.get(0).substring(1));
             }
-            List<String[]> rows = lines.stream().map(line -> line.split(",")).collect(Collectors.toList());
+            List<String[]> rows = lines.stream().map(line -> line.split(",")).collect(Collectors.toList());;
 
             int recordNum = 0;
             for (String[] row : rows) {
