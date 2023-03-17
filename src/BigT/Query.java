@@ -25,16 +25,21 @@ public class Query {
             // TODO ask TA : When would the buffer be freed ?
             // Reading the data inserted
             Stream stream = table.openStream(bigtName, orderType, "*", "*", "*", numBuf/4);
+            int count = 0;
            if(stream.getNext() != null) {
                Map map = stream.getNext();
                while (map != null) {
-                   System.out.println("[" + map.getRowLabel() + " " + map.getColumnLabel() + " " + map.getTimeStamp() + " " + "]"
-                           + " " + "->" + " " + map.getValue());
+                   count++;
+                   map.setFldOffset(map.getMapByteArray());
+                   map.print();
                    map = stream.getNext();
                }
            }
            else
                System.out.println("Sorry Data Doesn't Exist");
+
+            stream.closestream();
+            System.out.println("RECORD READ COUNT : "+count);
         }
         catch (Exception e) {
             System.out.println("An error occurred: " + e.getMessage());
