@@ -1,6 +1,10 @@
 package tests;
 
 import BigT.BatchInsert;
+import BigT.Map;
+import BigT.Stream;
+import BigT.bigt;
+import global.SystemDefs;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -67,6 +71,11 @@ class MainTest {
 
     public static void main(String argv[]) {
         int choice = -1;
+
+        bigt big = null;
+        int pages = 0;
+        String replacement_policy = "Clock";
+
         // We keep on giving the choice to user until the user choose option 8, which corresponds to Quit.
         String[] input;
         while(choice != 8) {
@@ -89,7 +98,31 @@ class MainTest {
                         break;
                     case 2:
                         // query
-                        // TODO: Make changes for query.
+                        //Could use this code for option2. Uncomment these lines and check.
+                        /*
+                        System.out.println("FORMAT: query BIGTABLENAME ORDERTYPE ROWFILTER COLUMNFILTER VALUEFILTER NUMBUF");
+                        input = getInput();
+                        if (input != null && input.length == 7) {
+                            SystemDefs.JavabaseDB.pcounter.initialize();
+                            big = new bigt(input[1], 2);
+                            Stream stream = big.openStream(input[1], Integer.parseInt(input[2]), input[3],
+                                    input[4], input[5], (int)((Integer.parseInt(input[6])*3)/4));
+                            int count =0;
+                            Map t = stream.getNext();
+                            while(true) {
+                                if (t == null) {
+                                    break;
+                                }
+                                count++;
+                                t.setFldOffset(t.getMapByteArray());
+                                t.print();
+                                t = stream.getNext();
+                            }
+                            stream.closestream();
+                            System.out.println("RECORD COUNT : "+count);
+
+                        }*/
+
                         break;
                     case 3:
                     case 4:
