@@ -39,7 +39,7 @@ public class Query {
                System.out.println("Sorry Data Doesn't Exist");
 
             stream.closestream();
-            System.out.println("RECORD READ COUNT : "+count);
+            System.out.println("RECORD COUNT : "+count);
         }
         catch (Exception e) {
             System.out.println("An error occurred: " + e.getMessage());
