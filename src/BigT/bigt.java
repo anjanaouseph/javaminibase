@@ -28,6 +28,27 @@ public class bigt {
     private int insertType;
     short[] res_str_sizes = new short[]{Map.DEFAULT_ROW_LABEL_ATTRIBUTE_SIZE, Map.DEFAULT_STRING_ATTRIBUTE_SIZE, Map.DEFAULT_STRING_ATTRIBUTE_SIZE};
 
+    /**
+     * Constructor
+     * @param name Name of the big table
+     * @param type Index type
+     * @throws HFException
+     * @throws HFBufMgrException
+     * @throws HFDiskMgrException
+     * @throws IOException
+     * @throws GetFileEntryException
+     * @throws ConstructPageException
+     * @throws AddFileEntryException
+     * @throws btree.IteratorException
+     * @throws btree.UnpinPageException
+     * @throws btree.FreePageException
+     * @throws btree.DeleteFileEntryException
+     * @throws btree.PinPageException
+     * @throws PageUnpinnedException
+     * @throws InvalidFrameNumberException
+     * @throws HashEntryNotFoundException
+     * @throws ReplacerException
+     */
     public bigt(String name, int type) throws HFException, HFBufMgrException, HFDiskMgrException, IOException,
             GetFileEntryException, ConstructPageException, AddFileEntryException, btree.IteratorException,
             btree.UnpinPageException, btree.FreePageException, btree.DeleteFileEntryException, btree.PinPageException,
@@ -101,14 +122,28 @@ public class bigt {
         expr[2] = null;
     }
 
+    /**
+     * Returns the name of this table
+     * @return
+     */
     public String getName(){
         return name;
     }
 
+    /**
+     * Returns the heap file for the corresponding index type.
+     * @param i index type
+     * @return
+     */
     public Heapfile getHeapFile(int i) {
         return heapFiles.get(i);
     }
 
+    /**
+     * Returns the name of the heap file for the provided type.
+     * @param i Index type
+     * @return
+     */
     public String getHeapFileName(int i){
         return heapFileNames.get(i);
     }
@@ -139,6 +174,16 @@ public class bigt {
         }
     }
 
+    /**
+     *
+     * @param indexName1
+     * @param type
+     * @return
+     * @throws GetFileEntryException
+     * @throws ConstructPageException
+     * @throws IOException
+     * @throws AddFileEntryException
+     */
     public BTreeFile createIndex(String indexName1, int type) throws GetFileEntryException,
             ConstructPageException,
             IOException,
