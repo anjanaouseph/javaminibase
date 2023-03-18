@@ -887,7 +887,7 @@ class DBDriver extends TestDriver implements GlobalConst {
     if (!test5()) { _passAll = FAIL; }
     if (!test6()) { _passAll = FAIL; }
    try{
-    SystemDefs.JavabaseDB.DBDestroy();
+    SystemDefs.JavabaseDB.BigDBDestroy();
    
    }
    catch (IOException e){
