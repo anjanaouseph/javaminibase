@@ -31,7 +31,7 @@ public class BatchInsert {
             if (SystemDefs.JavabaseDB == null) {
                 // Initialize the data base.
                 String dbpath = "/tmp/batch-insert"+System.getProperty("user.name")+".minibase-db";
-                SystemDefs sysdef = new SystemDefs( dbpath, 1000000, numbuf/2, "Clock" );
+                SystemDefs sysdef = new SystemDefs( dbpath, 1000000, numbuf, "Clock" );
             }
 
             // Check if the data file exists
