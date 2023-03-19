@@ -24,7 +24,7 @@ public class Query {
             bigt table = new bigt(bigtName, orderType);
             // TODO ask TA : When would the buffer be freed ?
             // Reading the data inserted
-            Stream stream = table.openStream(bigtName, orderType, "*", "*", "*", numBuf/4);
+            Stream stream = table.openStream(bigtName, orderType, rowFilter, columnFilter, valueFilter, numBuf/4);
             int count = 0;
            if(stream.getNext() != null) {
                Map map = stream.getNext();
