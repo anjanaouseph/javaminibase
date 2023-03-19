@@ -547,11 +547,11 @@ public class SortMap extends MapIterator implements GlobalConst {
                 break;
             case 5:
                 _sort_fld = 3;
-                order_type = 5;
+                order_type = 6;
                 break;
             case 6:
                 _sort_fld = 1;
-                order_type = 6;
+                order_type = 5;
                 break;
             case 7:
                 _sort_fld = 4;
