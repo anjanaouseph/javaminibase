@@ -1,0 +1,7 @@
+bin/
+.idea/
+javaminibase.iml
+.DS_Store
+/bin/
+*.class
+/out/

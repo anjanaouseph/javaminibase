@@ -1,17 +1,21 @@
 package tests;
 
-import java.io.*;
+import BigT.BatchInsert;
+import BigT.Map;
+import BigT.Stream;
+import BigT.bigt;
+import global.SystemDefs;
 
-import global.*;
-import iterator.*;
-import BigT.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
-import java.util.HashSet;
-import java.util.Scanner;
+class MainTest {
 
-class MainTest implements GlobalConst {
-
-    public static void display(){
+    /**
+     * The menu shown the user.
+     */
+    public static void menu(){
 
         System.out.println("------------------------ BigTable Tests --------------------------");
         System.out.println("Press 1 for Batch Insert");
@@ -25,6 +29,116 @@ class MainTest implements GlobalConst {
         System.out.println("------------------------ BigTable Tests --------------------------");
     }
 
+    /**
+     * Reads and returns the input choice of the user.
+     * @return choice
+     */
+    public static int getChoice () {
+
+        BufferedReader in = new BufferedReader (new InputStreamReader(System.in));
+        int choice;
+
+        try {
+            choice = Integer.parseInt(in.readLine());
+        }
+        catch (NumberFormatException e) {
+            return -1;
+        }
+        catch (IOException e) {
+            return -1;
+        }
+
+        return choice;
+    }
+
+    /**
+     * Reads the input for the choice from the user
+     * @return String[]
+     */
+    public static String[] getInput() {
+        BufferedReader in = new BufferedReader (new InputStreamReader(System.in));
+        try {
+            String inputFromUser = in.readLine();
+            // The input cmd is seperated by space.
+            return inputFromUser.split(" ");
+        } catch (Exception exception) {
+            System.out.println("Ran into an exception reading the input.");
+            exception.printStackTrace();
+        }
+
+        return null;
+    }
+
     public static void main(String argv[]) {
+        int choice = -1;
+
+        bigt big = null;
+        int pages = 0;
+        String replacement_policy = "Clock";
+
+        // We keep on giving the choice to user until the user choose option 8, which corresponds to Quit.
+        String[] input;
+        while(choice != 8) {
+            menu();
+            try {
+                choice = getChoice();
+
+                switch (choice) {
+                    case 1:
+                        //batch insert
+                        // TODO: Make changes for batch insert.
+                        System.out.println("FORMAT : batchinsert DATAFILENAME TYPE BIGTABLENAME NUMBUF");
+                        input = getInput();
+                        if (input != null && input.length == 5) {
+                            // TODO: May be check later and add conditons to check the values of input.
+                            new BatchInsert(input[1], Integer.parseInt(input[2]), input[3], Integer.parseInt(input[4]));
+                        } else {
+                            System.out.println("Improper input given. Try again !");
+                        }
+                        break;
+                    case 2:
+                        // query
+                        //Could use this code for option2. Uncomment these lines and check.
+                        /*
+                        System.out.println("FORMAT: query BIGTABLENAME ORDERTYPE ROWFILTER COLUMNFILTER VALUEFILTER NUMBUF");
+                        input = getInput();
+                        if (input != null && input.length == 7) {
+                            SystemDefs.JavabaseDB.pcounter.initialize();
+                            big = new bigt(input[1], 2);
+                            Stream stream = big.openStream(input[1], Integer.parseInt(input[2]), input[3],
+                                    input[4], input[5], (int)((Integer.parseInt(input[6])*3)/4));
+                            int count =0;
+                            Map t = stream.getNext();
+                            while(true) {
+                                if (t == null) {
+                                    break;
+                                }
+                                count++;
+                                t.setFldOffset(t.getMapByteArray());
+                                t.print();
+                                t = stream.getNext();
+                            }
+                            stream.closestream();
+                            System.out.println("RECORD COUNT : "+count);
+
+                        }*/
+
+                        break;
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                        System.out.println("This feature is not yet implemented !");
+                        System.out.println("Please choose again!!");
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                System.out.println("       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                System.out.println("       !!         Something is wrong                    !!");
+                System.out.println("       !!     Is your DB full? then exit. rerun it!     !!");
+                System.out.println("       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            }
+        }
     }
     }

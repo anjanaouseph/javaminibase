@@ -28,6 +28,27 @@ public class bigt {
     private int insertType;
     short[] res_str_sizes = new short[]{Map.DEFAULT_ROW_LABEL_ATTRIBUTE_SIZE, Map.DEFAULT_STRING_ATTRIBUTE_SIZE, Map.DEFAULT_STRING_ATTRIBUTE_SIZE};
 
+    /**
+     * Constructor
+     * @param name Name of the big table
+     * @param type Index type
+     * @throws HFException
+     * @throws HFBufMgrException
+     * @throws HFDiskMgrException
+     * @throws IOException
+     * @throws GetFileEntryException
+     * @throws ConstructPageException
+     * @throws AddFileEntryException
+     * @throws btree.IteratorException
+     * @throws btree.UnpinPageException
+     * @throws btree.FreePageException
+     * @throws btree.DeleteFileEntryException
+     * @throws btree.PinPageException
+     * @throws PageUnpinnedException
+     * @throws InvalidFrameNumberException
+     * @throws HashEntryNotFoundException
+     * @throws ReplacerException
+     */
     public bigt(String name, int type) throws HFException, HFBufMgrException, HFDiskMgrException, IOException,
             GetFileEntryException, ConstructPageException, AddFileEntryException, btree.IteratorException,
             btree.UnpinPageException, btree.FreePageException, btree.DeleteFileEntryException, btree.PinPageException,
@@ -35,20 +56,28 @@ public class bigt {
         String fileName = "";
         heapFiles = new ArrayList<>(6);
         indexFiles = new ArrayList<>(6);
+
         heapFileNames = new ArrayList<>(6);
         indexFileNames = new ArrayList<>(6);
         this.name = name;
         this.type = type;
+        // Making 1 as the default index type.
         boolean insert = (type ==1);
+
+        // Adding these so that we can have index of the array to the index type as the same number.
         heapFiles.add(null);
+        indexFiles.add(null);
         heapFileNames.add("");
         indexFileNames.add("");
+        // 5 files for the 5 index types.
         for(int i = 1; i <= 5; i++){
             heapFileNames.add(name + "_" + i);
             indexFileNames.add(name + "_index_" + i);
             heapFiles.add(new Heapfile(heapFileNames.get(i)));
+            indexFiles.add(this.createIndex(indexFileNames.get(i), i));
         }
 
+        //  indexUtil is to specify the name of the index file that will be created for the B-Tree index.
         indexUtil = name + "_" + "indexUtil";
 
         if(insert){
@@ -58,6 +87,7 @@ public class bigt {
             createIndexUtil();
 
             try {
+                // To ensure that the index is empty before inserting new data.
                 deleteAllNodesInIndex(utilityIndex);
                 for(int i=2; i<=5; i++) {
                     deleteAllNodesInIndex(indexFiles.get(i));
@@ -101,14 +131,28 @@ public class bigt {
         expr[2] = null;
     }
 
+    /**
+     * Returns the name of this table
+     * @return
+     */
     public String getName(){
         return name;
     }
 
+    /**
+     * Returns the heap file for the corresponding index type.
+     * @param i index type
+     * @return
+     */
     public Heapfile getHeapFile(int i) {
         return heapFiles.get(i);
     }
 
+    /**
+     * Returns the name of the heap file for the provided type.
+     * @param i Index type
+     * @return
+     */
     public String getHeapFileName(int i){
         return heapFileNames.get(i);
     }
@@ -139,6 +183,16 @@ public class bigt {
         }
     }
 
+    /**
+     *
+     * @param indexName1
+     * @param type
+     * @return
+     * @throws GetFileEntryException
+     * @throws ConstructPageException
+     * @throws IOException
+     * @throws AddFileEntryException
+     */
     public BTreeFile createIndex(String indexName1, int type) throws GetFileEntryException,
             ConstructPageException,
             IOException,
@@ -148,16 +202,20 @@ public class bigt {
             case 1:
                 break;
             case 2:
+                // Index type 2
                 tempIndex = new BTreeFile(indexName1, AttrType.attrString, Map.DEFAULT_ROW_LABEL_ATTRIBUTE_SIZE, DeleteFashion.NAIVE_DELETE);
                 break;
             case 3:
+                // Index type 3
                 tempIndex = new BTreeFile(indexName1, AttrType.attrString, Map.DEFAULT_STRING_ATTRIBUTE_SIZE, DeleteFashion.NAIVE_DELETE);
                 break;
             case 4:
+                // Index type 4
                 tempIndex = new BTreeFile(indexName1, AttrType.attrString,
                         Map.DEFAULT_ROW_LABEL_ATTRIBUTE_SIZE + Map.DEFAULT_STRING_ATTRIBUTE_SIZE + 5, DeleteFashion.NAIVE_DELETE);
                 break;
             case 5:
+                // Index type 4
                 tempIndex = new BTreeFile(indexName1, AttrType.attrString,
                         Map.DEFAULT_ROW_LABEL_ATTRIBUTE_SIZE + Map.DEFAULT_STRING_ATTRIBUTE_SIZE + 5, DeleteFashion.NAIVE_DELETE);
                 break;
@@ -226,6 +284,15 @@ public class bigt {
         utilityIndex.insert(new StringKey(map.getRowLabel() + map.getColumnLabel() + "%" + map.getTimeStamp() + "%" + heapFileIndex), mid);
     }
 
+    /**
+     * Returns the count of the maps we maintained.
+     * @return
+     * @throws InvalidSlotNumberException
+     * @throws InvalidTupleSizeException
+     * @throws HFDiskMgrException
+     * @throws HFBufMgrException
+     * @throws IOException
+     */
     public int getMapCnt() throws InvalidSlotNumberException, InvalidTupleSizeException, HFDiskMgrException,
             HFBufMgrException, IOException {
         int totalMapCount = 0;
@@ -268,7 +335,21 @@ public class bigt {
         return count;
     }
 
-
+    /**
+     * type parameter helps to identify the specific heap file where the record should be inserted.
+     * By passing the type parameter to the insertMap method, the method can access the correct heap file and perform the record insertion in the appropriate file.
+     * @param map
+     * @param type
+     * @return
+     * @throws HFDiskMgrException
+     * @throws InvalidTupleSizeException
+     * @throws HFException
+     * @throws IOException
+     * @throws FieldNumberOutOfBoundException
+     * @throws InvalidSlotNumberException
+     * @throws SpaceNotAvailableException
+     * @throws HFBufMgrException
+     */
     public MID insertMap(Map map, int type) throws HFDiskMgrException,
             InvalidTupleSizeException, HFException, IOException, FieldNumberOutOfBoundException,
             InvalidSlotNumberException, SpaceNotAvailableException, HFBufMgrException {
@@ -437,7 +518,7 @@ public class bigt {
     }
 
     public Stream openStream(String bigTableName, int orderType, String rowFilter, String columnFilter, String valueFilter, int numBuf) {
-        Stream stream = new Stream(bigTableName, 2, rowFilter, columnFilter, valueFilter, numBuf);
+        Stream stream = new Stream(bigTableName, orderType, rowFilter, columnFilter, valueFilter, numBuf);
         return stream;
     }
 
@@ -465,6 +546,18 @@ public class bigt {
 
     }
 
+    /**
+     * Deletes the Big table
+     * @param name
+     * @param type
+     * @throws IOException
+     * @throws HFException
+     * @throws HFBufMgrException
+     * @throws HFDiskMgrException
+     * @throws InvalidSlotNumberException
+     * @throws SpaceNotAvailableException
+     * @throws InvalidTupleSizeException
+     */
     public void deleteBigt(String name, int type)throws IOException, HFException, HFBufMgrException, HFDiskMgrException, InvalidSlotNumberException, SpaceNotAvailableException, InvalidTupleSizeException
     {
         try {
