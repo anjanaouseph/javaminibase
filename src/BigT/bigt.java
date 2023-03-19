@@ -61,13 +61,15 @@ public class bigt {
         indexFileNames = new ArrayList<>(6);
         this.name = name;
         this.type = type;
-        // TODO: Ask A : Is this default index type ? A - Yes. default is 1
+        // Making 1 as the default index type.
         boolean insert = (type ==1);
+
+        // Adding these so that we can have index of the array to the index type as the same number.
         heapFiles.add(null);
         indexFiles.add(null);
         heapFileNames.add("");
         indexFileNames.add("");
-        // TODO: Ask A : Why 5 ? A - 5 indexes
+        // 5 files for the 5 index types.
         for(int i = 1; i <= 5; i++){
             heapFileNames.add(name + "_" + i);
             indexFileNames.add(name + "_index_" + i);
@@ -75,8 +77,7 @@ public class bigt {
             indexFiles.add(this.createIndex(indexFileNames.get(i), i));
         }
 
-        // TODO: Ask A : What is index util ?
-        //  indexUtil is to specify the name of the index file that will be created for the B-Tree index. check parameter in the createIndexUtil method.
+        //  indexUtil is to specify the name of the index file that will be created for the B-Tree index.
         indexUtil = name + "_" + "indexUtil";
 
         if(insert){
@@ -86,7 +87,7 @@ public class bigt {
             createIndexUtil();
 
             try {
-                // TODO: Ask A : Why delete ? A -to ensure that the index is empty before inserting new data.
+                // To ensure that the index is empty before inserting new data.
                 deleteAllNodesInIndex(utilityIndex);
                 for(int i=2; i<=5; i++) {
                     deleteAllNodesInIndex(indexFiles.get(i));
@@ -283,6 +284,15 @@ public class bigt {
         utilityIndex.insert(new StringKey(map.getRowLabel() + map.getColumnLabel() + "%" + map.getTimeStamp() + "%" + heapFileIndex), mid);
     }
 
+    /**
+     * Returns the count of the maps we maintained.
+     * @return
+     * @throws InvalidSlotNumberException
+     * @throws InvalidTupleSizeException
+     * @throws HFDiskMgrException
+     * @throws HFBufMgrException
+     * @throws IOException
+     */
     public int getMapCnt() throws InvalidSlotNumberException, InvalidTupleSizeException, HFDiskMgrException,
             HFBufMgrException, IOException {
         int totalMapCount = 0;
@@ -325,17 +335,24 @@ public class bigt {
         return count;
     }
 
-
-    // TODO: Ask A : Do we need type here ?
-    //  parameter helps to identify the specific heap file where the record should be inserted.
-    //  By passing the type parameter to the insertMap method, the method can access the correct heap file and perform the record insertion in the appropriate file.
-    // TODO: Ask A - MID insertMap(byte[] mapPtr) Insert map into the big table, return its Mid. The insertMap() method ensures that there are at most three maps with the same row and column la- bels, but different timestamps, in the bigtable. When a fourth is inserted, the one with the oldest label is dropped from the big table.
-    //  A - Used  MID insertRecordMap(byte[] recPtr) from HeapFile.java.It  maps the MID of the newly inserted record. The MID is returned as MID mid;
-    //  mid = currentDataPage.insertRecord(recPtr); The insertRecord method of the HFPage class inserts a record into the data page and returns a MID object that identifies the location of the inserted record. This MID object is then returned by the insertRecordMap method as the result of the method call.
+    /**
+     * type parameter helps to identify the specific heap file where the record should be inserted.
+     * By passing the type parameter to the insertMap method, the method can access the correct heap file and perform the record insertion in the appropriate file.
+     * @param map
+     * @param type
+     * @return
+     * @throws HFDiskMgrException
+     * @throws InvalidTupleSizeException
+     * @throws HFException
+     * @throws IOException
+     * @throws FieldNumberOutOfBoundException
+     * @throws InvalidSlotNumberException
+     * @throws SpaceNotAvailableException
+     * @throws HFBufMgrException
+     */
     public MID insertMap(Map map, int type) throws HFDiskMgrException,
             InvalidTupleSizeException, HFException, IOException, FieldNumberOutOfBoundException,
             InvalidSlotNumberException, SpaceNotAvailableException, HFBufMgrException {
-        // TODO: Ask A - MID insertMap(byte[] mapPtr) Insert map into the big table, return its Mid. The insertMap() method ensures that there are at most three maps with the same row and column la- bels, but different timestamps, in the bigtable. When a fourth is inserted, the one with the oldest label is dropped from the big table.
         this.insertType = type;
         MID mid = heapFiles.get(type).insertRecordMap(map.getMapByteArray());
         return mid;
