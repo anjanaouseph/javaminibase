@@ -16,7 +16,7 @@ public class Query {
             // Calling the constructor with the data
 
             bigt table = new bigt(bigtName, orderType);
-            // TODO ask TA : When would the buffer be freed ?
+
             // Reading the data inserted
 
             Stream stream = table.openStream(bigtName, orderType, rowFilter, columnFilter, valueFilter, numBuf/4);
