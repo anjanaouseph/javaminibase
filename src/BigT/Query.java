@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Query {
-    public Query(String bigtName, int orderType, String rowFilter, String columnFilter, String valueFilter, int numBuf) {
+    public Query(String bigtName, int type, int orderType, String rowFilter, String columnFilter, String valueFilter, int numBuf) {
 
+        System.out.println("Table name : " + bigtName + "_" + type);
         System.out.println("Order type : " + orderType);
-        System.out.println("Table name : " + bigtName);
         System.out.println("Number of buffers : " + numBuf);
 
         try {
@@ -24,27 +24,33 @@ public class Query {
             bigt table = new bigt(bigtName, orderType);
             // TODO ask TA : When would the buffer be freed ?
             // Reading the data inserted
+
+            //String bigTable = bigtName+"_"+type;
+
             Stream stream = table.openStream(bigtName, orderType, rowFilter, columnFilter, valueFilter, numBuf/4);
+
             int count = 0;
-           if(stream.getNext() != null) {
-               Map map = stream.getNext();
-               while (map != null) {
-                   count++;
-                   map.setFldOffset(map.getMapByteArray());
-                   map.print();
-                   map = stream.getNext();
-               }
-           }
-           else
-               System.out.println("Sorry Data Doesn't Exist");
+            Map map = stream.getNext();
+            while(map != null) {
+                if (map == null) {
+                    break;
+                }
+                map.setFldOffset(map.getMapByteArray());
+                map.print();
+                count++;
+                map = stream.getNext();
+            }
 
             stream.closestream();
-            System.out.println("RECORD COUNT : "+count);
+
+            System.out.println("RECORD COUNT : "+ count);
+            System.out.println("READ COUNT : " + PCounter.rCounter);
+            System.out.println("WRITE COUNT : " + PCounter.wCounter);
         }
         catch (Exception e) {
             System.out.println("An error occurred: " + e.getMessage());
     }
-        System.out.println("READ COUNT : " + PCounter.rCounter);
-        System.out.println("WRITE COUNT : " + PCounter.wCounter);
+
+
     }
 }

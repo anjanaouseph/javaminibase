@@ -91,11 +91,11 @@ class MainTest {
                         break;
                     case 2:
                         // query
-                        System.out.println("FORMAT : query BIGTABLENAME ORDERTYPE ROWFILTER COLUMNFILTER VALUEFILTER NUMBUF");
+                        System.out.println("FORMAT : query BIGTABLENAME TYPE ORDERTYPE ROWFILTER COLUMNFILTER VALUEFILTER NUMBUF");
                         input = getInput();
-                        if (input != null && input.length == 7) {
+                        if (input != null && input.length == 8) {
                             SystemDefs.JavabaseDB.pcounter.initialize();
-                            new Query(input[1],Integer.parseInt(input[2]),input[3],input[4],input[5],Integer.parseInt(input[6])/4);
+                            new Query(input[1],Integer.parseInt(input[2]),Integer.parseInt(input[3]),input[4],input[5],input[6],Integer.parseInt(input[7]));
 
                         } else {
                             System.out.println("Improper input given. Try again !");
