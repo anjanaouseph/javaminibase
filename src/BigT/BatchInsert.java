@@ -27,6 +27,13 @@ public class BatchInsert {
 
 
         try {
+            // Checking if the DB is already created.
+            if (SystemDefs.JavabaseDB == null) {
+                // Initialize the data base.
+                String dbpath = "/tmp/batch-insert"+System.getProperty("user.name")+".minibase-db";
+                SystemDefs sysdef = new SystemDefs( dbpath, 1000000, numbuf/2, "Clock" );
+            }
+
             // Check if the data file exists
             try {
                 Paths.get(datafile);
@@ -35,12 +42,6 @@ public class BatchInsert {
                 throw new Exception(exception);
             }
 
-            // Checking if the DB is already created.
-            if (SystemDefs.JavabaseDB == null) {
-                // Initialize the data base.
-                String dbpath = "/tmp/batch-insert"+System.getProperty("user.name")+".minibase-db";
-                SystemDefs sysdef = new SystemDefs( dbpath, 1000000, numbuf, "Clock" );
-            }
 
             // Calling the constructor with the data.
             // Since we retrieve/create the heap files with a standard name. If the table was already created, the right file would be fetched.
@@ -70,6 +71,7 @@ public class BatchInsert {
                 table.insertIndex(mid, map, type);
             }
 
+            // Stats
             System.out.println("INSERTED RECORDS : " + recordNum);
             System.out.println("READ COUNT : " + PCounter.rCounter);
             System.out.println("WRITE COUNT : " + PCounter.wCounter);
