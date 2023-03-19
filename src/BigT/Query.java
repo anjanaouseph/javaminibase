@@ -14,18 +14,19 @@ import java.util.stream.Collectors;
 public class Query {
     public Query(String bigtName, int type, int orderType, String rowFilter, String columnFilter, String valueFilter, int numBuf) {
 
-        System.out.println("Table name : " + bigtName + "_" + type);
+        String bigTable = bigtName+"_"+type;
+
+        System.out.println("Table name : " + bigTable);
         System.out.println("Order type : " + orderType);
         System.out.println("Number of buffers : " + numBuf);
 
         try {
 
             // Calling the constructor with the data
+
             bigt table = new bigt(bigtName, orderType);
             // TODO ask TA : When would the buffer be freed ?
             // Reading the data inserted
-
-            //String bigTable = bigtName+"_"+type;
 
             Stream stream = table.openStream(bigtName, orderType, rowFilter, columnFilter, valueFilter, numBuf/4);
 
