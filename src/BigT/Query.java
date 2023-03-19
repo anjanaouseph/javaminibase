@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class Query {
     public Query(String bigtName, int orderType, String rowFilter, String columnFilter, String valueFilter, int numBuf) {
 
-        System.out.println("Index type : " + orderType);
+        System.out.println("Order type : " + orderType);
         System.out.println("Table name : " + bigtName);
         System.out.println("Number of buffers : " + numBuf);
 
