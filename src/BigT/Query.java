@@ -10,9 +10,7 @@ public class Query {
 
             bigt table = new bigt(bigtName, type);
 
-            // Reading the data inserted
-
-            //buffer pages gets used up and we get buffer manager "BUFMGR: BUFFER_EXCEEDED" exception so use 3/4*numbuf
+            // Retrieving the data inserted based on the query
             Stream stream = table.openStream(bigtName, orderType, rowFilter, columnFilter, valueFilter, numBuf);
 
             int count = 0;
