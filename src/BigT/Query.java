@@ -5,18 +5,15 @@ import diskmgr.PCounter;
 public class Query {
     public Query(String bigtName, int type, int orderType, String rowFilter, String columnFilter, String valueFilter, int numBuf) {
 
-        String bigTable = bigtName+"_"+type;
-
         try {
-
-            // Calling the constructor with the data
+            // Calling the constructor with the bigtable name and type
 
             bigt table = new bigt(bigtName, type);
 
             // Reading the data inserted
 
             //buffer pages gets used up and we get buffer manager "BUFMGR: BUFFER_EXCEEDED" exception so use 3/4*numbuf
-            Stream stream = table.openStream(bigtName, orderType, rowFilter, columnFilter, valueFilter, (3*numBuf)/4);
+            Stream stream = table.openStream(bigtName, orderType, rowFilter, columnFilter, valueFilter, numBuf);
 
             int count = 0;
             Map map = stream.getNext();
