@@ -1729,6 +1729,7 @@ class SORTDriver extends TestDriver
 }
 
 public class SortTest {
+
   public static void main(String argv[]) {
     boolean sortstatus;
 
