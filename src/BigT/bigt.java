@@ -571,32 +571,5 @@ public class bigt {
         }
     }
 
-    public void createMapInsertIndex(int type){
-        if(type == 1) {
-            return;
-        }
-        FileScanMap fscan;
-        try{
-            deleteAllNodesInIndex(indexFiles.get(type));
-        }catch(Exception e){
-            System.err.println("Exception caused in deleting records in BTree index for storage type: " + type);
-        }
-        try{
-            indexFiles.set(type, createIndex(indexFileNames.get(type), type));
-            fscan = new FileScanMap(heapFileNames.get(type), null, null, false);
-            Pair mapPair;
-            mapPair = fscan.get_next_mid();
-            while(mapPair!=null){
-                insertIndex(mapPair.getMid(), mapPair.getMap(), type);
-                mapPair = fscan.get_next_mid();
-            }
-            fscan.close();
-            indexFiles.get(type).close();
-        }catch(Exception ex){
-            System.err.println("Exception caused in creating BTree Index for storage index type: " + type);
-            ex.printStackTrace();
-        }
-    }
-
 
 }

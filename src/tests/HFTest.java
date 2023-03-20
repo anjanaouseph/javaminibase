@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 import java.lang.*;
 
+import BigT.Map;
 import heap.*;
 import bufmgr.*;
 import diskmgr.*;
@@ -726,10 +727,10 @@ class HFDriver extends TestDriver implements GlobalConst {
 
 	}
 
-	public static java.util.Map[] generateMaps() throws IOException, InvalidTupleSizeException{
+	public static Map[] generateMaps() throws IOException, InvalidTupleSizeException{
 		int choice = 100;
-		java.util.Map[] mapArr = new java.util.Map[choice];
-		java.util.Map templateMap = new java.util.Map();
+		Map[] mapArr = new Map[choice];
+		Map templateMap = new Map();
         /* Variable length map header
             short rowLabelLength = (short)ROW_LABEL.length();
             short columnLabelLength = (short)COL_LABEL.length();
@@ -739,7 +740,7 @@ class HFDriver extends TestDriver implements GlobalConst {
         */
 		templateMap.setDefaultHdr();
 		for(int i=0; i<choice; i++) {
-			java.util.Map m = new java.util.Map((int)templateMap.getLength());
+			Map m = new Map((int)templateMap.getLength());
 			byte[] m_data = new byte[(int)templateMap.getLength()];
 			m.mapInit(m_data, 0, templateMap.getLength());
 			m.setDefaultHdr();
@@ -757,7 +758,7 @@ class HFDriver extends TestDriver implements GlobalConst {
 		try {
 			SystemDefs.JavabaseDB.pcounter.initialize();
 			System.out.println("\n  Test 6 Map: Insert and scan fixed-size map records\n");
-			java.util.Map[] mapArr = generateMaps();
+			Map[] mapArr = generateMaps();
 
 			MID mid = new MID();
 			Heapfile f = null;
@@ -834,7 +835,7 @@ class HFDriver extends TestDriver implements GlobalConst {
 
 			if (status == OK) {
 				int i = 0;
-				java.util.Map map = new java.util.Map();
+				Map map = new Map();
 
 				boolean done = false;
 				while (!done) {
@@ -930,7 +931,7 @@ class HFDriver extends TestDriver implements GlobalConst {
 		if (status == OK) {
 			try {
 				int len, i = 0;
-				java.util.Map map = null;
+				Map map = null;
 				boolean done = false;
 
 				while (!done) {
@@ -996,7 +997,7 @@ class HFDriver extends TestDriver implements GlobalConst {
 		if (status == OK) {
 			try {
 				int len, i = 0;
-				java.util.Map map = new java.util.Map();
+				Map map = new Map();
 				boolean done = false;
 
 				while (!done) {
@@ -1078,7 +1079,7 @@ class HFDriver extends TestDriver implements GlobalConst {
 		if (status == OK) {
 			try {
 				int i = 0;
-				java.util.Map map = null;
+				Map map = null;
 				boolean done = false;
 
 				while (!done) {
@@ -1095,9 +1096,9 @@ class HFDriver extends TestDriver implements GlobalConst {
 
 					if (!done && status == OK) {
 
-						java.util.Map newMap = null;
+						Map newMap = null;
 						try {
-							newMap = new java.util.Map(map.getMapByteArray(), 0, map.getLength());
+							newMap = new Map(map.getMapByteArray(), 0, map.getLength());
 							newMap.setFldOffset(map.getMapByteArray());
 							String updatedRowLabel = newMap.getRowLabel() + "-mod";
 							String updatedColLabel = newMap.getColumnLabel() + "-mod";
@@ -1164,8 +1165,8 @@ class HFDriver extends TestDriver implements GlobalConst {
 		if (status == OK) {
 			try {
 				int len, i = 0;
-				java.util.Map map1 = new java.util.Map();
-				java.util.Map map2;
+				Map map1 = new Map();
+				Map map2;
 				boolean done = false;
 
 				while (!done) {
@@ -1229,7 +1230,7 @@ class HFDriver extends TestDriver implements GlobalConst {
 			scan = f.openScanMap();
 			if (status == OK) {
 				int i = 0;
-				java.util.Map map = new java.util.Map();
+				Map map = new Map();
 				mid = new MID();
 				boolean done = false;
 				while (!done) {
@@ -1262,9 +1263,9 @@ class HFDriver extends TestDriver implements GlobalConst {
 		return status;
 	}
 
-	protected java.util.Map[] generateSimilarMaps() throws IOException, InvalidTupleSizeException{
-		java.util.Map[] mapArr = new java.util.Map[4];
-		java.util.Map templateMap = new java.util.Map();
+	protected Map[] generateSimilarMaps() throws IOException, InvalidTupleSizeException{
+		Map[] mapArr = new Map[4];
+		Map templateMap = new Map();
         /* Variable length map header
             short rowLabelLength = (short)ROW_LABEL.length();
             short columnLabelLength = (short)COL_LABEL.length();
@@ -1274,7 +1275,7 @@ class HFDriver extends TestDriver implements GlobalConst {
         */
 		templateMap.setDefaultHdr();
 		for(int i=0; i<4; i++) {
-			java.util.Map m = new java.util.Map((int)templateMap.getLength());
+			Map m = new Map((int)templateMap.getLength());
 			byte[] m_data = new byte[(int)templateMap.getLength()];
 			m.mapInit(m_data, 0, templateMap.getLength());
 			m.setDefaultHdr();
@@ -1287,9 +1288,9 @@ class HFDriver extends TestDriver implements GlobalConst {
 		return mapArr;
 	}
 
-	protected java.util.Map[] generateExpectedMap() throws IOException, InvalidTupleSizeException {
-		java.util.Map[] mapArr = new java.util.Map[3];
-		java.util.Map templateMap = new java.util.Map();
+	protected Map[] generateExpectedMap() throws IOException, InvalidTupleSizeException {
+		Map[] mapArr = new Map[3];
+		Map templateMap = new Map();
         /* Variable length map header
             short rowLabelLength = (short)ROW_LABEL.length();
             short columnLabelLength = (short)COL_LABEL.length();
@@ -1299,7 +1300,7 @@ class HFDriver extends TestDriver implements GlobalConst {
         */
 		templateMap.setDefaultHdr();
 		for(int i=0; i<3; i++) {
-			java.util.Map m = new java.util.Map((int)templateMap.getLength());
+			Map m = new Map((int)templateMap.getLength());
 			byte[] m_data = new byte[(int)templateMap.getLength()];
 			m.mapInit(m_data, 0, templateMap.getLength());
 			m.setDefaultHdr();
@@ -1322,8 +1323,8 @@ class HFDriver extends TestDriver implements GlobalConst {
 		boolean status = OK;
 		try {
 			System.out.println("\n  Test 9 Map: Insert similar map records and validate that only 3 map records are stored. \n");
-			java.util.Map[] mapArr = generateSimilarMaps();
-			java.util.Map[] expectedMapArr = generateExpectedMap();
+			Map[] mapArr = generateSimilarMaps();
+			Map[] expectedMapArr = generateExpectedMap();
 
 			MID mid = new MID();
 			Heapfile f = null;
@@ -1400,7 +1401,7 @@ class HFDriver extends TestDriver implements GlobalConst {
 
 			if (status == OK) {
 				int i = 0;
-				java.util.Map map = new Map();
+				Map map = new Map();
 
 				boolean done = false;
 				while (!done) {

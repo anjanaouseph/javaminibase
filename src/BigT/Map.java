@@ -33,9 +33,6 @@ public class Map implements GlobalConst {
     public static final int DEFAULT_ROW_LABEL_ATTRIBUTE_SIZE = 20;
 
     public static final int DEFAULT_STRING_ATTRIBUTE_SIZE = 20;
-
-    private static final int integerAttributeSize = 4;
-
     public static final int noOfStrFields = 3;
 
     public static final int MAX_MAP_LENGTH = MINIBASE_PAGESIZE;
