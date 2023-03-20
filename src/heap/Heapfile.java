@@ -346,12 +346,8 @@ public class Heapfile implements Filetype, GlobalConst {
 			_ftype = ORDINARY;
 		}
 
-		// The constructor gets run in two different cases.
-		// In the first case, the file is new and the header page
-		// must be initialized.  This case is detected via a failure
-		// in the db->get_file_entry() call.  In the second case, the
-		// file already exists and all that must be done is to fetch
-		// the header page into the buffer pool
+		// There are two scenarios in which the constructor is called. In the first, the file is new and the header page must be initialized.
+		//Failures in db->get_file_entry() are indicative of this case. It is only necessary to fetch the header page from the buffer pool in the second case when the file already exists
 
 		// try to open the file
 
@@ -840,7 +836,7 @@ public class Heapfile implements Filetype, GlobalConst {
 	}
 
 	/**
-	 * Insert record into file, return its Rid.
+	 * Insert record into file, return its MID.
 	 *
 	 * @param recPtr pointer of the record
 	 * @param recLen the length of the record
@@ -1132,6 +1128,20 @@ public class Heapfile implements Filetype, GlobalConst {
 		}
 	}
 
+	/** Initiate a sequential scan.
+	 * @exception InvalidTupleSizeException Invalid tuple size
+	 * @exception IOException I/O errors
+	 *
+	 */
+	public Scan openScan()
+			throws InvalidTupleSizeException,
+			IOException
+	{
+		Scan newscan = new Scan(this,true);
+		return newscan;
+	}
+
+
 	/**
 	 * Delete record from file with given mid.
 	 *
@@ -1143,7 +1153,7 @@ public class Heapfile implements Filetype, GlobalConst {
 	 * @throws HFDiskMgrException         exception thrown from diskmgr layer
 	 * @throws Exception                  other exception
 	 */
-	public boolean deleteRecordTuple(MID mid)
+	public boolean deleteMap(MID mid)
 			throws InvalidSlotNumberException,
 			InvalidTupleSizeException,
 			HFException,
@@ -1727,7 +1737,6 @@ public class Heapfile implements Filetype, GlobalConst {
 		Tuple atuple;
 
 		pinPage(currentDirPageId, currentDirPage, false);
-		//currentDirPage.openHFpage(pageinbuffer);
 
 		MID mid = new MID();
 		while (currentDirPageId.pid != INVALID_PAGE) {
@@ -1736,8 +1745,6 @@ public class Heapfile implements Filetype, GlobalConst {
 				 mid = currentDirPage.nextRecord(mid)) {
 				atuple = currentDirPage.getTupleRecord(mid);
 				DataPageInfo dpinfo = new DataPageInfo(atuple);
-				//int dpinfoLen = arecord.length;
-
 				freePage(dpinfo.pageId);
 
 			}
@@ -1751,7 +1758,6 @@ public class Heapfile implements Filetype, GlobalConst {
 			currentDirPageId.pid = nextDirPageId.pid;
 			if (nextDirPageId.pid != INVALID_PAGE) {
 				pinPage(currentDirPageId, currentDirPage, false);
-				//currentDirPage.openHFpage(pageinbuffer);
 			}
 		}
 

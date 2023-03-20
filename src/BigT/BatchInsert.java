@@ -73,7 +73,7 @@ public class BatchInsert {
                 map.setValue(row[3]);
 
                 MID mid = table.insertMap(map, type);
-                table.insertIndex(mid, map, type);
+                table.addIndex(mid, map, type);
             }
 
             // Stats

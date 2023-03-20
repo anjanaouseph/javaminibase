@@ -309,7 +309,7 @@ class HFDriver extends TestDriver implements GlobalConst {
 					if (i % 2 == 0) odd = false;
 					if (odd) {       // Delete the odd-numbered ones.
 						try {
-							status = f.deleteRecordTuple(mid);
+							status = f.deleteMap(mid);
 						} catch (Exception e) {
 							status = FAIL;
 							System.err.println("*** Error deleting record " + i + "\n");
