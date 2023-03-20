@@ -1,9 +1,6 @@
 package tests;
 
-import BigT.BatchInsert;
-import BigT.Map;
-import BigT.Stream;
-import BigT.bigt;
+import BigT.*;
 import global.SystemDefs;
 
 import java.io.BufferedReader;
@@ -98,31 +95,15 @@ class MainTest {
                         break;
                     case 2:
                         // query
-                        //Could use this code for option2. Uncomment these lines and check.
-                        /*
-                        System.out.println("FORMAT: query BIGTABLENAME ORDERTYPE ROWFILTER COLUMNFILTER VALUEFILTER NUMBUF");
+                        System.out.println("FORMAT : query BIGTABLENAME TYPE ORDERTYPE ROWFILTER COLUMNFILTER VALUEFILTER NUMBUF");
                         input = getInput();
-                        if (input != null && input.length == 7) {
-                            SystemDefs.JavabaseDB.pcounter.initialize();
-                            big = new bigt(input[1], 2);
-                            Stream stream = big.openStream(input[1], Integer.parseInt(input[2]), input[3],
-                                    input[4], input[5], (int)((Integer.parseInt(input[6])*3)/4));
-                            int count =0;
-                            Map t = stream.getNext();
-                            while(true) {
-                                if (t == null) {
-                                    break;
-                                }
-                                count++;
-                                t.setFldOffset(t.getMapByteArray());
-                                t.print();
-                                t = stream.getNext();
-                            }
-                            stream.closestream();
-                            System.out.println("RECORD COUNT : "+count);
+                        if (input != null && input.length == 8) {
+                            SystemDefs.JavabaseDB.pcounter.initialize();//to set the read and write counters to 0
+                            new Query(input[1],Integer.parseInt(input[2]),Integer.parseInt(input[3]),input[4],input[5],input[6],Integer.parseInt(input[7]));
 
-                        }*/
-
+                        } else {
+                            System.out.println("Improper input given. Try again !");
+                        }
                         break;
                     case 3:
                     case 4:
