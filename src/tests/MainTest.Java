@@ -98,7 +98,7 @@ class MainTest {
                         System.out.println("FORMAT : query BIGTABLENAME TYPE ORDERTYPE ROWFILTER COLUMNFILTER VALUEFILTER NUMBUF");
                         input = getInput();
                         if (input != null && input.length == 8) {
-                            SystemDefs.JavabaseDB.pcounter.initialize();
+                            SystemDefs.JavabaseDB.pcounter.initialize();//to set the read and write counters to 0
                             new Query(input[1],Integer.parseInt(input[2]),Integer.parseInt(input[3]),input[4],input[5],input[6],Integer.parseInt(input[7]));
 
                         } else {

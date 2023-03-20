@@ -7,19 +7,16 @@ public class Query {
 
         String bigTable = bigtName+"_"+type;
 
-        System.out.println("Table name : " + bigTable);
-        System.out.println("Order type : " + orderType);
-        System.out.println("Number of buffers : " + numBuf);
-
         try {
 
             // Calling the constructor with the data
 
-            bigt table = new bigt(bigtName, orderType);
+            bigt table = new bigt(bigtName, type);
 
             // Reading the data inserted
 
-            Stream stream = table.openStream(bigtName, orderType, rowFilter, columnFilter, valueFilter, numBuf/4);
+            //buffer pages gets used up and we get buffer manager "BUFMGR: BUFFER_EXCEEDED" exception so use 3/4*numbuf
+            Stream stream = table.openStream(bigtName, orderType, rowFilter, columnFilter, valueFilter, (3*numBuf)/4);
 
             int count = 0;
             Map map = stream.getNext();
