@@ -7,7 +7,6 @@ public class Query {
 
         try {
             // Calling the constructor with the bigtable name and type
-
             bigt table = new bigt(bigtName, type);
 
             // Retrieving the data inserted based on the query
