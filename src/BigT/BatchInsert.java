@@ -4,6 +4,7 @@ import diskmgr.PCounter;
 import global.MID;
 import global.SystemDefs;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
@@ -47,7 +48,11 @@ public class BatchInsert {
             // Since we retrieve/create the heap files with a standard name. If the table was already created, the right file would be fetched.
             bigt table = new bigt(bigTableName, type);
 
-            List<String> lines = Files.readAllLines(Paths.get(datafile));
+            List<String> lines = Files.readAllLines(Paths.get(datafile), StandardCharsets.UTF_8);
+            if (!lines.isEmpty() && lines.get(0).startsWith("\uFEFF")) {
+                // Remove the UTF-8 BOM character from the first line
+                lines.set(0, lines.get(0).substring(1));
+            }
             // There is no header
             List<String[]>  rows = lines.stream().map(line -> line.split(",")).collect(Collectors.toList());
 
