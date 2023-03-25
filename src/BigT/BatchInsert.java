@@ -51,7 +51,7 @@ public class BatchInsert {
 
             if (SystemDefs.JavabaseDB == null) {
                 // Initialize the data base.
-                String dbpath = "/tmp/batch-insert"+System.getProperty("user.name")+".minibase-db";
+                String dbpath = "/tmp/"+ bigTableName + "_" + type  + ".minibase-db";
                 SystemDefs sysdef = new SystemDefs( dbpath, 1000000, numbuf, "Clock" );
             }
 
@@ -143,7 +143,6 @@ public class BatchInsert {
 
                             MID mid = table.insertMap(map, type);
                             table.insertIndex(mid, map, type);
-                            map.print();
 
                             i++;
                             noDuplicateRecordCount++;
@@ -163,10 +162,6 @@ public class BatchInsert {
                             MID mid = table.insertMap(map, type);
                             table.insertIndex(mid, map, type);
 
-//                            MID mid = tempFile.insertRecordMap(map.getMapByteArray());
-//                            table.insertIndex(mid, map, type);
-
-                            map.print();
                             i++;
                             noDuplicateRecordCount++;
                         }
