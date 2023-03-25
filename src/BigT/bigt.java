@@ -239,6 +239,7 @@ public class bigt {
             LeafDeleteException, InsertException, IOException {
         switch (type) {
             case 1:
+                indexFiles.get(1).insert(new StringKey(map.getValue()), mid);
                 break;
             case 2:
                 indexFiles.get(2).insert(new StringKey(map.getRowLabel()), mid);
@@ -568,6 +569,33 @@ public class bigt {
         catch(Exception e)
         {
             System.exit(1);
+        }
+    }
+
+    public void createMapInsertIndex(int type){
+        if(type == 1) {
+            return;
+        }
+        FileScanMap fscan;
+        try{
+            deleteAllNodesInIndex(indexFiles.get(type));
+        }catch(Exception e){
+            System.err.println("Exception caused in deleting records in BTree index for storage type: " + type);
+        }
+        try{
+            indexFiles.set(type, createIndex(indexFileNames.get(type), type));
+            fscan = new FileScanMap(heapFileNames.get(type), null, null, false);
+            Pair mapPair;
+            mapPair = fscan.get_next_mid();
+            while(mapPair!=null){
+                insertIndex(mapPair.getMid(), mapPair.getMap(), type);
+                mapPair = fscan.get_next_mid();
+            }
+            fscan.close();
+            indexFiles.get(type).close();
+        }catch(Exception ex){
+            System.err.println("Exception caused in creating BTree Index for storage index type: " + type);
+            ex.printStackTrace();
         }
     }
 
