@@ -87,7 +87,7 @@ class MainTest {
                         System.out.println("FORMAT : batchinsert DATAFILENAME TYPE BIGTABLENAME NUMBUF");
                         input = getInput();
                         if (input != null && input.length == 5) {
-                            // TODO: May be check later and add conditons to check the values of input.
+                            SystemDefs.JavabaseDB.pcounter.initialize();//to set the read and write counters to 0
                             new BatchInsert(input[1], Integer.parseInt(input[2]), input[3], Integer.parseInt(input[4]));
                         } else {
                             System.out.println("Improper input given. Try again !");

@@ -57,16 +57,6 @@ public class bigDB implements GlobalConst {
         pcounter = new PCounter();
     }
 
-    public bigDB(int type) {
-        pcounter = new PCounter();
-        if(type == 1){}
-        else if(type == 2){}
-        else if(type == 3){}
-        else if(type == 4){}
-        else if(type == 5){}
-    }
-
-
     /**
      * DB Constructors.
      * Create a database with the specified number of pages where the page
