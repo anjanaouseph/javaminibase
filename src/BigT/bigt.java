@@ -65,9 +65,10 @@ public class bigt {
         boolean insert = (type ==1);
 
         // Adding these so that we can have index of the array to the index type as the same number.
-        heapFiles.add(null);
+        // We will be using this to resolve duplicate records.
+        heapFiles.add(new Heapfile(name + "_0"));
         indexFiles.add(null);
-        heapFileNames.add("");
+        heapFileNames.add(name + "_0");
         indexFileNames.add("");
         // 5 files for the 5 index types.
         for(int i = 1; i <= 5; i++){
@@ -98,6 +99,32 @@ public class bigt {
             }
         }
         initExprs();
+    }
+
+    public bigt(String name) throws HFDiskMgrException, HFException, HFBufMgrException, IOException, ConstructPageException, GetFileEntryException, PinPageException, AddFileEntryException {
+        if (heapFiles == null) {
+            this.name = name;
+
+            heapFiles = new ArrayList<>(6);
+            indexFiles = new ArrayList<>(6);
+
+            heapFileNames = new ArrayList<>(6);
+            indexFileNames = new ArrayList<>(6);
+
+            // Adding these so that we can have index of the array to the index type as the same number.
+            heapFiles.add(null);
+            indexFiles.add(null);
+            heapFileNames.add("");
+            indexFileNames.add("");
+
+            // 5 files for the 5 index types.
+            for(int i = 1; i <= 5; i++){
+                heapFileNames.add(name + "_" + i);
+                indexFileNames.add(name + "_index_" + i);
+                heapFiles.add(new Heapfile(heapFileNames.get(i)));
+                indexFiles.add(this.createIndex(indexFileNames.get(i), i));
+            }
+        }
     }
 
     public void initExprs(){
@@ -301,6 +328,10 @@ public class bigt {
             totalMapCount += heapFiles.get(i).getRecCntMap();
         }
         return totalMapCount;
+    }
+
+    public int getMapCnt(int type) throws HFDiskMgrException, InvalidSlotNumberException, InvalidTupleSizeException, HFBufMgrException, IOException {
+        return heapFiles.get(type).getRecCntMap();
     }
 
     public int getRowCnt()  throws Exception{
@@ -599,5 +630,71 @@ public class bigt {
         }
     }
 
+    /**
+     *
+     * @param numBuf - Number of buffers
+     * @return
+     * @throws IOException
+     */
+    public int getRowLabelCount(int numBuf) throws IOException {
+        // There is a combined scan so, it gets distinct row labels for all the heap files for this table.
+        // Order type 1 - results are first ordered in row label, then column label, then time stamp
+        Stream stream = new Stream(name, 1, "*", "*", "*", numBuf);
+        int count = 0;
 
+        Map reading = stream.getNext();
+
+        String oldRowLabel = reading.getRowLabel();
+
+        if (oldRowLabel != null)
+            count++;
+
+        reading = stream.getNext();
+
+        while (reading != null) {
+            if (!reading.getRowLabel().equals(oldRowLabel)) {
+                count++;
+                oldRowLabel = reading.getRowLabel();
+            }
+            reading = stream.getNext();
+        }
+
+        stream.closestream();
+
+        return count;
+    }
+
+    /**
+     *
+     * @param numBuf - Number of buffers
+     * @return
+     * @throws IOException
+     */
+    public int getColLabelCount(int numBuf) throws IOException {
+        // There is a combined scan so, it gets distinct row labels for all the heap files for this table.
+        // order type - 2 - results are first ordered in column label, then row label, then time stamp
+        Stream stream = new Stream(name, 2, "*", "*", "*", numBuf);
+        int count = 0;
+
+        Map reading = stream.getNext();
+
+        String oldColumnLabel = reading.getColumnLabel();
+
+        if (oldColumnLabel != null)
+            count++;
+
+        reading = stream.getNext();
+
+        while (reading != null) {
+            if (!reading.getColumnLabel().equals(oldColumnLabel)) {
+                count++;
+                oldColumnLabel = reading.getColumnLabel();
+            }
+            reading = stream.getNext();
+        }
+
+        stream.closestream();
+
+        return count;
+    }
 }

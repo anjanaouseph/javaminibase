@@ -109,6 +109,15 @@ class MainTest {
                     case 4:
                     case 5:
                     case 6:
+                        System.out.println("FORMAT : getCounts BIGTABLENAME NUMBUF");
+                        input = getInput();
+                        if (input != null && input.length == 3) {
+                            SystemDefs.JavabaseDB.pcounter.initialize();//to set the read and write counters to 0
+                            new GetCounts(input[1], Integer.parseInt(input[2]));
+                        } else {
+                            System.out.println("Improper input given. Try again !");
+                        }
+                        break;
                     case 7:
                         System.out.println("This feature is not yet implemented !");
                         System.out.println("Please choose again!!");

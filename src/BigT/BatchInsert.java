@@ -52,7 +52,7 @@ public class BatchInsert {
             if (SystemDefs.JavabaseDB == null) {
                 // Initialize the data base.
                 String dbpath = "/tmp/"+ bigTableName + "_" + type  + ".minibase-db";
-                SystemDefs sysdef = new SystemDefs( dbpath, 1000000, numbuf, "Clock" );
+                SystemDefs sysdef = new SystemDefs( dbpath, 1000000, numbuf*5, "Clock" );
             }
 
             // Check if the data file exists
@@ -77,8 +77,8 @@ public class BatchInsert {
             List<String[]>  rows = lines.stream().map(line -> line.split(",")).collect(Collectors.toList());
 
             int recordNum = 0;
-            int insertTypeFileIndex = type == 1 ? 5 : type-1;
-            Heapfile tempFile = table.getHeapFile(insertTypeFileIndex);
+            int insertTypeFileIndex = 0;
+
             for (String[] row : rows) {
                 recordNum++;
                 // reading each row
@@ -97,8 +97,8 @@ public class BatchInsert {
                table.insertMap(map, insertTypeFileIndex);
             }
 
-            Stream stream = new Stream(bigTableName, 1, "*", "*", "*", numbuf/2);
-            Map reading = stream.getNext();
+            Stream tempStream = new Stream(table.getHeapFileName(insertTypeFileIndex), 1, "*", "*", "*", numbuf/2, false);
+            Map reading = tempStream.getNext();
 
             String oldRowLabel = null;
             String oldColumnLabel = null;
@@ -142,7 +142,8 @@ public class BatchInsert {
                             map.setValue(tempMaps.get(i).getValue());
 
                             MID mid = table.insertMap(map, type);
-                            table.insertIndex(mid, map, type);
+                            if (type > 1)
+                                table.insertIndex(mid, map, type);
 
                             i++;
                             noDuplicateRecordCount++;
@@ -160,7 +161,8 @@ public class BatchInsert {
                             map.setValue(tempMaps.get(i).getValue());
 
                             MID mid = table.insertMap(map, type);
-                            table.insertIndex(mid, map, type);
+                            if (type > 1)
+                                table.insertIndex(mid, map, type);
 
                             i++;
                             noDuplicateRecordCount++;
@@ -182,15 +184,15 @@ public class BatchInsert {
 
                 tempMaps.add(map);
 
-                reading = stream.getNext();
+                reading = tempStream.getNext();
             }
 
             table.getHeapFile(insertTypeFileIndex).deleteFileMap();
             table.heapFiles.set(insertTypeFileIndex, new Heapfile(table.heapFileNames.get(insertTypeFileIndex)));
-            stream.closestream();
+            tempStream.closestream();
 
             // Stats
-            System.out.println("INSERTED RECORDS : " + recordNum);
+            System.out.println("TOTAL RECORDS : " + recordNum);
             System.out.println("INSERTED NON DUPLICATE RECORDS : " + noDuplicateRecordCount);
             System.out.println("READ COUNT : " + PCounter.rCounter);
             System.out.println("WRITE COUNT : " + PCounter.wCounter);
