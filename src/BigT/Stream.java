@@ -57,6 +57,32 @@ public class Stream {
         }
     }
 
+
+    public Stream(String bigtName, int orderType, String rowFilter, String columnFilter, String valueFilter, int numBuf, boolean combined) {
+        this.orderType = orderType;
+        this.numBuf = numBuf;
+        List<CondExpr> exprs = new ArrayList<CondExpr>();
+        exprs.addAll(processFilter(rowFilter, 1));
+        exprs.addAll(processFilter(columnFilter, 2));
+        exprs.addAll(processFilter(valueFilter, 4));
+
+        cond_exprs = new CondExpr[exprs.size() + 1];
+        int i = 0;
+        for (CondExpr expr : exprs) {
+            cond_exprs[i++] = expr;
+        }
+        cond_exprs[i] = null;
+
+        try {
+            // This gets a file scan map on heap file name if combined is false.
+            map_iterator = new FileScanMap(bigtName, null, cond_exprs, combined);
+            sortMap = new SortMap(null, null, null, map_iterator, this.orderType, new MapOrder(MapOrder.Ascending), null, this.numBuf);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Exception occurred while initiating the stream");
+        }
+    }
+
     public static CondExpr[] getKeyFilterForIndexType(int indexType, String rowFilter, String columnFilter, String valueFilter) {
         List<CondExpr> exprForKey = new ArrayList<CondExpr>();
         switch(indexType) {
