@@ -226,23 +226,27 @@ public class bigt {
             AddFileEntryException{
         BTreeFile tempIndex=null;
         switch(type){
+
             case 1:
+                // Index type 1 - No Index
+//                tempIndex = new BTreeFile(indexName1, AttrType.attrString, Map.DEFAULT_STRING_ATTRIBUTE_SIZE, DeleteFashion.NAIVE_DELETE);
                 break;
+
             case 2:
-                // Index type 2
+                // Index type 2 - Index on row label
                 tempIndex = new BTreeFile(indexName1, AttrType.attrString, Map.DEFAULT_ROW_LABEL_ATTRIBUTE_SIZE, DeleteFashion.NAIVE_DELETE);
                 break;
             case 3:
-                // Index type 3
+                // Index type 3 - Index on column label
                 tempIndex = new BTreeFile(indexName1, AttrType.attrString, Map.DEFAULT_STRING_ATTRIBUTE_SIZE, DeleteFashion.NAIVE_DELETE);
                 break;
             case 4:
-                // Index type 4
+                // Index type 4 - Index on column and row label
                 tempIndex = new BTreeFile(indexName1, AttrType.attrString,
                         Map.DEFAULT_ROW_LABEL_ATTRIBUTE_SIZE + Map.DEFAULT_STRING_ATTRIBUTE_SIZE + 5, DeleteFashion.NAIVE_DELETE);
                 break;
             case 5:
-                // Index type 4
+                // Index type 4 - Index on row label and value.
                 tempIndex = new BTreeFile(indexName1, AttrType.attrString,
                         Map.DEFAULT_ROW_LABEL_ATTRIBUTE_SIZE + Map.DEFAULT_STRING_ATTRIBUTE_SIZE + 5, DeleteFashion.NAIVE_DELETE);
                 break;
@@ -266,18 +270,23 @@ public class bigt {
             LeafDeleteException, InsertException, IOException {
         switch (type) {
             case 1:
-                indexFiles.get(1).insert(new StringKey(map.getValue()), mid);
+                // Index type 1 - No Index
+//                indexFiles.get(1).insert(new StringKey(map.getValue()), mid);
                 break;
             case 2:
+                // Index type 2 - Index on row label
                 indexFiles.get(2).insert(new StringKey(map.getRowLabel()), mid);
                 break;
             case 3:
+                // Index type 3 - Index on column label
                 indexFiles.get(3).insert(new StringKey(map.getColumnLabel()), mid);
                 break;
             case 4:
+                // Index type 4 - Index on column and row label
                 indexFiles.get(4).insert(new StringKey(map.getColumnLabel() + "%" + map.getRowLabel()), mid);
                 break;
             case 5:
+                // Index type 4 - Index on row label and value.
                 indexFiles.get(5).insert(new StringKey(map.getRowLabel() + "%" + map.getValue()), mid);
                 break;
         }
