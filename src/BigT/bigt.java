@@ -28,6 +28,10 @@ public class bigt {
     private int insertType;
     short[] res_str_sizes = new short[]{Map.DEFAULT_ROW_LABEL_ATTRIBUTE_SIZE, Map.DEFAULT_STRING_ATTRIBUTE_SIZE, Map.DEFAULT_STRING_ATTRIBUTE_SIZE};
 
+    public static final AttrType[] BIGT_ATTR_TYPES = new AttrType[]{new AttrType(0), new AttrType(0), new AttrType(1), new AttrType(0)};
+    public static short[] BIGT_STR_SIZES = new short[]{(short) 25,
+            (short) 25,  //colValue
+            (short) 25}; //keyValue;//rowValue
     /**
      * Constructor
      * @param name Name of the big table
@@ -705,5 +709,13 @@ public class bigt {
         stream.closestream();
 
         return count;
+    }
+
+    public void close() throws PageUnpinnedException, PagePinnedException, PageNotFoundException, HashOperationException, BufMgrException, IOException, HashEntryNotFoundException, InvalidFrameNumberException, ReplacerException {
+        for (int i = 0; i < 5; i++) {
+            if (this.indexFiles.get(i) != null) {
+                this.indexFiles.get(i).close();
+            }
+        }
     }
 }

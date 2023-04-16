@@ -37,6 +37,7 @@ public class Map implements GlobalConst {
 
     public static final int MAX_MAP_LENGTH = MINIBASE_PAGESIZE;
 
+
     public Map() throws IOException {
         this.data = new byte[MAX_MAP_LENGTH];
         this.map_offset = 0;

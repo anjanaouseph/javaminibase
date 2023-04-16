@@ -1,5 +1,6 @@
 package iterator;
 
+import BigT.Map;
 import heap.*;
 import global.*;
 import diskmgr.*;
@@ -18,18 +19,18 @@ public class SpoofIbuf implements GlobalConst {
     }
 
 
-    /**
-     * Initialize some necessary inormation, call Iobuf to create the
-     * object, and call init to finish intantiation
-     *
-     * @param bufs[][] the I/O buffer
-     * @param n_pages  the numbers of page of this buffer
-     * @param tSize    the tuple size
-     * @param fd       the reference to an Heapfile
-     * @param Ntuples  the tuple numbers of the page
-     * @throws IOException some I/O fault
-     * @throws Exception   other exceptions
-     */
+//    /**
+//     * Initialize some necessary inormation, call Iobuf to create the
+//     * object, and call init to finish intantiation
+//     *
+//     * @param bufs[][] the I/O buffer
+//     * @param n_pages  the numbers of page of this buffer
+//     * @param tSize    the tuple size
+//     * @param fd       the reference to an Heapfile
+//     * @param Ntuples  the tuple numbers of the page
+//     * @throws IOException some I/O fault
+//     * @throws Exception   other exceptions
+//     */
     public void init(Heapfile fd, byte bufs[][], int n_pages,
                      int tSize, int Ntuples)
             throws IOException,
@@ -71,7 +72,7 @@ public class SpoofIbuf implements GlobalConst {
      * @throws IOException some I/O fault
      * @throws Exception   other exceptions
      */
-    public Tuple Get(Tuple buf) throws IOException, Exception {
+    public Map Get(Map buf) throws IOException, Exception {
         if (tot_t_proc == n_tuples) done = true;
 
         if (done == true) {
@@ -96,7 +97,7 @@ public class SpoofIbuf implements GlobalConst {
             return null;
         }
 
-        buf.tupleSet(_bufs[curr_page], t_rd_from_pg * t_size, t_size);
+        buf.mapSet(_bufs[curr_page], t_rd_from_pg * t_size, t_size);
         tot_t_proc++;
 
         // Setup for next read
