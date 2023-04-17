@@ -1,6 +1,7 @@
 package BigT;
 import global.AttrOperator;
 import global.AttrType;
+import global.MapOrder;
 import global.TupleOrder;
 import heap.Heapfile;
 import iterator.*;
@@ -18,9 +19,9 @@ public class rowJoin {
     private Heapfile rightHeapFile;
     private String LEFT_HEAP = "leftTempHeap";
     private String RIGHT_HEAP = "rightTempHeap";
-    private TupleOrder sortOrder = new TupleOrder(TupleOrder.Ascending);
+    private MapOrder sortOrder = new MapOrder(MapOrder.Ascending);
     private SortMerge sm = null;
-    private FileScan leftIterator, rightIterator;
+    private FileScanMap leftIterator, rightIterator;
     private String outBigTName;
     private String rightBigTName;
     private String leftName;
@@ -112,10 +113,10 @@ public class rowJoin {
     }
 
     public void StoreJoinResult() throws Exception {
-        Map tempMap = sm.getnext();
+        Map tempMap = sm.get_next();
         while (tempMap != null) {
             storeToBigT(tempMap.getRowLabel(), tempMap.getColumnLabel());
-            tempMap = sm.getnext();
+            tempMap = sm.get_next();
         }
         sm.close();
     }
@@ -142,8 +143,8 @@ public class rowJoin {
         projection[3] = new FldSpec(rel, 4);
 
         try {
-            this.leftIterator = new FileScan(LEFT_HEAP, bigt.BIGT_ATTR_TYPES, bigt.BIGT_STR_SIZES, (short) 4, 4, projection, null);
-            this.rightIterator = new FileScan(RIGHT_HEAP, bigt.BIGT_ATTR_TYPES, bigt.BIGT_STR_SIZES, (short) 4, 4, projection, null);
+            this.leftIterator = new FileScanMap(LEFT_HEAP,  projection, null,false);
+            this.rightIterator = new FileScanMap(RIGHT_HEAP, projection, null,false);
             this.sm = new SortMerge(bigt.BIGT_ATTR_TYPES, 4, bigt.BIGT_STR_SIZES, bigt.BIGT_ATTR_TYPES,
                     4, bigt.BIGT_STR_SIZES, 3, 4, 3, 4, amtOfMem,
                     this.leftIterator, this.rightIterator, false, false, sortOrder, outFilter,

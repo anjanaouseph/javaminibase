@@ -32,6 +32,8 @@ public class bigt {
     public static short[] BIGT_STR_SIZES = new short[]{(short) 25,
             (short) 25,  //colValue
             (short) 25}; //keyValue;//rowValue
+    public static int orderType = 1;
+    public static boolean mapInsertOrder = false;
     /**
      * Constructor
      * @param name Name of the big table
