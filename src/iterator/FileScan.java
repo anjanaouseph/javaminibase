@@ -1,14 +1,7 @@
 package iterator;
-
-
-import BigT.Map;
 import heap.*;
 import global.*;
 import bufmgr.*;
-import diskmgr.*;
-import index.IndexException;
-
-
 import java.lang.*;
 import java.io.*;
 
@@ -28,7 +21,6 @@ public class FileScan extends Iterator {
     private int nOutFlds;
     private CondExpr[] OutputFilter;
     public FldSpec[] perm_mat;
-    private Map tempMap;
 
     /**
      * constructor
@@ -136,30 +128,6 @@ public class FileScan extends Iterator {
             }
         }
     }
-
-    public Map getnext()
-            throws JoinsException,
-            IOException,
-            InvalidTupleSizeException,
-            InvalidTypeException,
-            PageNotReadException,
-            PredEvalException,
-            UnknowAttrType,
-            FieldNumberOutOfBoundException,
-            WrongPermat {
-        MID mid = new MID();
-        ;
-
-        while (true) {
-            if ((tempMap = scan.getNextMap(mid)) == null) {
-                return null;
-            }
-
-           return tempMap;
-        }
-    }
-
-
 
     /**
      * implement the abstract method close() from super class Iterator
