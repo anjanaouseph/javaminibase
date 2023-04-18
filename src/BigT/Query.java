@@ -12,11 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Query {
-    public Query(String bigtName, int type, int orderType, String rowFilter, String columnFilter, String valueFilter, int numBuf) {
+    public Query(String bigtName, int orderType, String rowFilter, String columnFilter, String valueFilter, int numBuf) {
 
-        String bigTable = bigtName+"_"+type;
-
-        System.out.println("Table name : " + bigTable);
+        System.out.println("Table name : " + bigtName);
         System.out.println("Order type : " + orderType);
         System.out.println("Number of buffers : " + numBuf);
 
