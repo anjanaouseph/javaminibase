@@ -3,11 +3,11 @@ package BigT;
 import diskmgr.PCounter;
 
 public class Query {
-    public Query(String bigtName, int type, int orderType, String rowFilter, String columnFilter, String valueFilter, int numBuf) {
+    public Query(String bigtName, int orderType, String rowFilter, String columnFilter, String valueFilter, int numBuf) {
 
         try {
             // Calling the constructor with the bigtable name and type
-            bigt table = new bigt(bigtName, type);
+            bigt table = new bigt(bigtName);
 
             // Retrieving the data inserted based on the query
             Stream stream = table.openStream(bigtName, orderType, rowFilter, columnFilter, valueFilter, numBuf);
