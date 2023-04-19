@@ -24,7 +24,7 @@ public class bigt {
     private AttrType[] attrType;
     private FldSpec[] projlist;
     private CondExpr[] expr;
-    MapIndexScan index_scan;
+    MapIndexScanBigT index_scan;
     private int insertType;
     short[] res_str_sizes = new short[]{Map.DEFAULT_ROW_LABEL_ATTRIBUTE_SIZE, Map.DEFAULT_STRING_ATTRIBUTE_SIZE, Map.DEFAULT_STRING_ATTRIBUTE_SIZE};
 
@@ -67,9 +67,10 @@ public class bigt {
         // Adding these so that we can have index of the array to the index type as the same number.
         // We will be using this to resolve duplicate records.
         heapFiles.add(new Heapfile(name + "_0"));
-        indexFiles.add(null);
+//        indexFiles.add(null);
         heapFileNames.add(name + "_0");
-        indexFileNames.add("");
+        indexFileNames.add(name + "_index_" + "0");
+        indexFiles.add(this.createIndex(indexFileNames.get(0), 0));
         // 5 files for the 5 index types.
         for(int i = 1; i <= 5; i++){
             heapFileNames.add(name + "_" + i);
@@ -90,9 +91,9 @@ public class bigt {
             try {
                 // To ensure that the index is empty before inserting new data.
                 deleteAllNodesInIndex(utilityIndex);
-                for(int i=2; i<=5; i++) {
-                    deleteAllNodesInIndex(indexFiles.get(i));
-                }
+//                for(int i=2; i<=5; i++) {
+//                    deleteAllNodesInIndex(indexFiles.get(i));
+//                }
             } catch(Exception e) {
                 e.printStackTrace();
                 System.out.println("Exception occurred while destroying all nodes of index files");
@@ -112,10 +113,10 @@ public class bigt {
             indexFileNames = new ArrayList<>(6);
 
             // Adding these so that we can have index of the array to the index type as the same number.
-            heapFiles.add(null);
-            indexFiles.add(null);
-            heapFileNames.add("");
-            indexFileNames.add("");
+            heapFiles.add(new Heapfile(name + "_0"));
+            indexFileNames.add(name + "_index_" + "0");
+            heapFileNames.add(name + "_0");
+            indexFiles.add(this.createIndex(indexFileNames.get(0), 0));
 
             // 5 files for the 5 index types.
             for(int i = 1; i <= 5; i++){
@@ -124,6 +125,8 @@ public class bigt {
                 heapFiles.add(new Heapfile(heapFileNames.get(i)));
                 indexFiles.add(this.createIndex(indexFileNames.get(i), i));
             }
+
+            initExprs();
         }
     }
 
@@ -226,7 +229,10 @@ public class bigt {
             AddFileEntryException{
         BTreeFile tempIndex=null;
         switch(type){
-
+            case 0:
+                tempIndex = new BTreeFile(indexName1, AttrType.attrString,
+                        Map.DEFAULT_ROW_LABEL_ATTRIBUTE_SIZE + Map.DEFAULT_STRING_ATTRIBUTE_SIZE + 5, DeleteFashion.NAIVE_DELETE);
+                break;
             case 1:
                 // Index type 1 - No Index
 //                tempIndex = new BTreeFile(indexName1, AttrType.attrString, Map.DEFAULT_STRING_ATTRIBUTE_SIZE, DeleteFashion.NAIVE_DELETE);
@@ -269,6 +275,10 @@ public class bigt {
             NodeNotMatchException, ConvertException, DeleteRecException, IndexSearchException, IteratorException,
             LeafDeleteException, InsertException, IOException {
         switch (type) {
+            case 0:
+                // index on row label and column label
+                indexFiles.get(0).insert(new StringKey(map.getColumnLabel() + "%" + map.getRowLabel()), mid);
+                break;
             case 1:
                 // Index type 1 - No Index
 //                indexFiles.get(1).insert(new StringKey(map.getValue()), mid);
@@ -486,7 +496,7 @@ public class bigt {
         }
     }
 
-    public void deleteDuplicateRecords()
+    public int deleteDuplicateRecords()
             throws IndexException,
             InvalidTypeException,
             InvalidTupleSizeException,
@@ -496,66 +506,129 @@ public class bigt {
             InvalidSlotNumberException,
             HFException,
             HFBufMgrException,
-            HFDiskMgrException, PageUnpinnedException, InvalidFrameNumberException, HashEntryNotFoundException, ReplacerException {
+            HFDiskMgrException, PageUnpinnedException, InvalidFrameNumberException, HashEntryNotFoundException, ReplacerException, IteratorException, InsertRecException, ConstructPageException, IndexInsertRecException, LeafDeleteException, PinPageException, UnpinPageException, FreePageException, IndexFullDeleteException, LeafRedistributeException, DeleteRecException, RecordNotFoundException, DeleteFashionException, KeyNotMatchException, RedistributeException, IndexSearchException, KeyTooLongException, ConvertException, InsertException, NodeNotMatchException, LeafInsertRecException {
 
-        index_scan = new MapIndexScan(new IndexType(IndexType.B_Index), this.getHeapFileName(1), indexUtil, attrType, res_str_sizes, 4, 4, projlist, null, null, 1, true);
-        Pair previousMapPair = index_scan.get_next_mid();
-        Pair curMapPair = index_scan.get_next_mid();
+        index_scan = new MapIndexScanBigT(new IndexType(IndexType.B_Index), this, this.indexFileNames.get(0), attrType, res_str_sizes, 4, 4, projlist, null, null, 1, false);
 
-        String[] indexKeyTokens;
 
-        String prevKey = previousMapPair.getIndexKey();
-        String curKey = "";
+        // Pair - Map map, MID mid, String indexKey, int heapFileIndex; NOTE: indexKey would be null.
+        Pair readingPair = index_scan.get_next_mid();
 
-        List<Pair> duplicateMaps = new ArrayList<>();
-        indexKeyTokens = prevKey.split("%");
-        previousMapPair  = new Pair(previousMapPair.getMap(), previousMapPair.getMid(), previousMapPair.getIndexKey(),
-                Integer.parseInt(indexKeyTokens[indexKeyTokens.length-1]));
-        duplicateMaps.add(previousMapPair);
-        MID mid;
-        Map map;
-        while(curMapPair!=null){
-            curKey = curMapPair.getIndexKey();
-            indexKeyTokens = curKey.split("%");
-            String curKeyString = curKey.substring(0, curKey.indexOf('%'));
-            String prevKeyString = prevKey.substring(0, prevKey.indexOf('%'));
+        List<Pair> toDelete = new ArrayList<>();
 
-            curMapPair = new Pair(curMapPair.getMap(), curMapPair.getMid(), curMapPair.getIndexKey(),
-                    Integer.parseInt(indexKeyTokens[indexKeyTokens.length-1]));
+        String oldRowLabel = null;
+        String oldColumnLabel = null;
 
-            if(prevKeyString.equals(curKeyString)){
-                duplicateMaps.add(curMapPair);
-            }else{
-                duplicateMaps = new ArrayList<>();
-                duplicateMaps.add(curMapPair);
-            }
-            if(duplicateMaps.size() == 4){
-                duplicateMaps.sort(new Comparator<Pair>() {
-                    @Override
-                    public int compare(Pair o1, Pair o2) {
-                        String o1String = o1.getIndexKey();
-                        String o2String = o2.getIndexKey();
+        if (readingPair != null && readingPair.getMap() != null) {
+            oldRowLabel = readingPair.getMap().getRowLabel();
+            oldColumnLabel = readingPair.getMap().getColumnLabel();
+        }
 
-                        Integer o1Timestamp = Integer.parseInt(o1.getIndexKey().split("%")[1]);
-                        Integer o2Timestamp = Integer.parseInt(o2.getIndexKey().split("%")[1]);
-                        return o1Timestamp.compareTo(o2Timestamp);
+        List<Pair> tempMaps = new ArrayList<>();
+        int noDuplicateRecordCount = 0;
+
+        while (readingPair != null && readingPair.getMap() != null) {
+            if (!readingPair.getMap().getRowLabel().equals(oldRowLabel) || !readingPair.getMap().getColumnLabel().equals(oldColumnLabel)) {
+                oldRowLabel = readingPair.getMap().getRowLabel();
+                oldColumnLabel = readingPair.getMap().getColumnLabel();
+
+                // This means we have to remove few maps as we only have to maintain at most 3 maps.
+                if (tempMaps.size() > 3) {
+                    // Sorting the maps in descending order of timestamps.
+                    Collections.sort(tempMaps, (a, b) -> {
+                        try {
+                            return b.getMap().getTimeStamp() - a.getMap().getTimeStamp();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+
+                    // Delete all the entries except the first 3.
+                    int i = tempMaps.size()-1;
+                    while(i >= 3) {
+                        // Deleting the map from the file.
+                        try {
+                            // MID, index key, heap file index
+                            toDelete.add(tempMaps.get(i));
+                        } catch (Exception exception) {
+                            System.out.println(tempMaps.get(i).getHeapFileIndex());
+                            System.out.println(tempMaps.get(i).getMid());
+                            System.out.println(tempMaps.get(i).getMap().getRowLabel());
+                            System.out.println(tempMaps.get(i).getMap().getColumnLabel());
+                        }
+
+                        i--;
                     }
-                });
-                mid = duplicateMaps.get(0).getMid();
-                heapFiles.get(duplicateMaps.get(0).getHeapFileIndex()).deleteRecordMap(mid);
-                duplicateMaps.remove(0);
-            }
-            prevKey = curKey;
-            curMapPair = index_scan.get_next_mid();
-        }
-        index_scan.close();
-        utilityIndex.close();
 
-        if(duplicateMaps.size() == 4){
-            mid = duplicateMaps.get(0).getMid();
-            heapFiles.get(duplicateMaps.get(0).getHeapFileIndex()).deleteRecordMap(mid);
-            duplicateMaps.remove(0);
+                    noDuplicateRecordCount += 3;
+                } else {
+                    // Nothing to delete here.
+                    noDuplicateRecordCount += tempMaps.size();
+                }
+
+                // clear tempMap
+                tempMaps.clear();
+            }
+
+            // Add it to the list
+            tempMaps.add(readingPair);
+
+            readingPair = index_scan.get_next_mid();
         }
+
+
+        if (tempMaps.size() > 3) {
+            // Sorting the maps in descending order of timestamps.
+            Collections.sort(tempMaps, (a, b) -> {
+                try {
+                    return b.getMap().getTimeStamp() - a.getMap().getTimeStamp();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+            // Delete all the entries except the first 3.
+            int i = tempMaps.size()-1;
+            while(i >= 3) {
+                // Deleting the map from the file.
+                try {
+                    toDelete.add(tempMaps.get(i));
+                } catch (Exception exception) {
+                    System.out.println(tempMaps.get(i).getHeapFileIndex());
+                    System.out.println(tempMaps.get(i).getMid());
+                    System.out.println(tempMaps.get(i).getMap().getRowLabel());
+                    System.out.println(tempMaps.get(i).getMap().getColumnLabel());
+                }
+
+                i--;
+            }
+
+            noDuplicateRecordCount += 3;
+        } else {
+            // Nothing to delete here.
+            noDuplicateRecordCount += tempMaps.size();
+        }
+
+        // clear tempMap
+        tempMaps.clear();
+
+        for (Pair pair: toDelete) {
+            this.indexFiles.get(0).Delete(new StringKey(  pair.getMap().getColumnLabel()  + "%" + pair.getMap().getRowLabel()), pair.getMid());
+            this.removeIndex(pair.getMid(), pair.getMap(), pair.getHeapFileIndex());
+            this.getHeapFile(pair.getHeapFileIndex()).deleteRecordMap(pair.getMid());
+        }
+
+
+        index_scan = new MapIndexScanBigT(new IndexType(IndexType.B_Index), this, this.indexFileNames.get(0), attrType, res_str_sizes, 4, 4, projlist, null, null, 1, false);
+
+        readingPair = index_scan.get_next_mid();
+
+        while (readingPair != null) {
+            System.out.println(readingPair.getMap().getRowLabel() + "%" + readingPair.getMap().getColumnLabel() + "%" + readingPair.getMap().getTimeStamp());
+            readingPair = index_scan.get_next_mid();
+        }
+
+        return noDuplicateRecordCount;
     }
 
     public Stream openStream(String bigTableName, int orderType, String rowFilter, String columnFilter, String valueFilter, int numBuf) {
