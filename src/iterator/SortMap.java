@@ -4,11 +4,7 @@ import java.io.*;
 
 import BigT.Map;
 import global.*;
-import bufmgr.*;
-import diskmgr.*;
 import heap.*;
-import index.*;
-import chainexception.*;
 
 /**
  * The Sort class sorts a file. All necessary information are passed as

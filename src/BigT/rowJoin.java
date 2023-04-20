@@ -50,7 +50,7 @@ public class rowJoin {
     public void storeLeftColMatch() throws Exception {
         Map tempMap = this.leftStream.getNext();
         Map oldMap = new Map();
-        oldMap.setHdr((short) 0,bigt.BIGT_ATTR_TYPES, bigt.BIGT_STR_SIZES); // what is numfields in map header ask Nagarjun?
+        oldMap.setHdr((short) 4,bigt.BIGT_ATTR_TYPES, bigt.BIGT_STR_SIZES); // what is numfields in map header ask Nagarjun?
         oldMap.mapCopy(tempMap);
         String tempRow = tempMap.getRowLabel();
 //        System.out.println("Left Stream results => ");
@@ -72,7 +72,7 @@ public class rowJoin {
     public void storeRightColMatch() throws Exception {
         Map tempMap = this.rightStream.getNext();
         Map oldMap = new Map();
-        oldMap.setHdr((short) 0,bigt.BIGT_ATTR_TYPES, bigt.BIGT_STR_SIZES);
+        oldMap.setHdr((short) 4,bigt.BIGT_ATTR_TYPES, bigt.BIGT_STR_SIZES);
         oldMap.mapCopy(tempMap);
         String tempRow = tempMap.getRowLabel();
 //        System.out.println("Right Stream results => ");
@@ -95,13 +95,13 @@ public class rowJoin {
 
         Map map = new Map();
         try {
-            map.setHdr((short) 0,bigt.BIGT_ATTR_TYPES, bigt.BIGT_STR_SIZES);
+            map.setHdr((short) 4,bigt.BIGT_ATTR_TYPES, bigt.BIGT_STR_SIZES);
         } catch (Exception e) {
             e.printStackTrace();
         }
         Map map1 = new Map(map.size());
         try {
-            map1.setHdr((short) 0,bigt.BIGT_ATTR_TYPES, bigt.BIGT_STR_SIZES);
+            map1.setHdr((short) 4,bigt.BIGT_ATTR_TYPES, bigt.BIGT_STR_SIZES);
             map1.setRowLabel(rowKey);
             map1.setColumnLabel(columnKey);
             map1.setTimeStamp(timestamp);
@@ -122,7 +122,6 @@ public class rowJoin {
     }
 
     public void SortMergeJoin() throws Exception {
-        MapIterator leftIterator, rightIterator;
 
         CondExpr[] outFilter = new CondExpr[2];
         outFilter[0] = new CondExpr();
@@ -166,7 +165,7 @@ public class rowJoin {
         while (tempMap != null) {
             if (tempMap.getColumnLabel().equals(this.columnName) == true) {
                 Map m2 = new Map();
-                m2.setHdr((short) 0,bigt.BIGT_ATTR_TYPES, bigt.BIGT_STR_SIZES);
+                m2.setHdr((short) 4,bigt.BIGT_ATTR_TYPES, bigt.BIGT_STR_SIZES);
                 m2.mapCopy(tempMap);
                 joinedMaps.add(m2);
             } else {
@@ -195,7 +194,7 @@ public class rowJoin {
         while (tempMap != null) {
             if (tempMap.getColumnLabel().equals(this.columnName)) {
                 Map m2 = new Map();
-                m2.setHdr((short) 0,bigt.BIGT_ATTR_TYPES, bigt.BIGT_STR_SIZES);///ask nagarjun whats the first args
+                m2.setHdr((short) 4,bigt.BIGT_ATTR_TYPES, bigt.BIGT_STR_SIZES);///ask nagarjun whats the first args
                 m2.mapCopy(tempMap);
                 joinedMaps.add(m2);
             } else {

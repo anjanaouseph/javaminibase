@@ -3,22 +3,27 @@ package iterator;
 import BigT.Map;
 import BigT.bigt;
 import BigT.rowJoin;
-import heap.*;
-import global.*;
-import bufmgr.*;
-import index.*;
+import bufmgr.PageNotReadException;
+import global.AttrType;
+import global.GlobalConst;
+import global.MapOrder;
+import global.TupleOrder;
+import heap.Heapfile;
+import heap.InvalidTupleSizeException;
+import heap.InvalidTypeException;
+import index.IndexException;
 
-import java.io.*;
+import java.io.IOException;
 
 /**
- * This file contains the interface for the sort_merg joins.
+ * This file contains the interface for the sort_merge joins.
  * We name the two relations being joined as R and S.
  * This file contains an implementation of the sort merge join
  * algorithm as described in the Shapiro paper. It makes use of the external
  * sorting utility to generate runs, and then uses the iterator interface to
  * get successive tuples for the final merge.
  */
-public class SortMerge extends MapIterator implements GlobalConst {
+public class SortMergeNew extends MapIterator implements GlobalConst {
     private AttrType _in1[], _in2[];
     private int in1_len, in2_len;
     private MapIterator p_i1,        // pointers to the two iterators. If the
@@ -71,29 +76,29 @@ public class SortMerge extends MapIterator implements GlobalConst {
      * @throws TupleUtilsException exception from using tuple utils
      * @throws IOException         some I/O fault
      */
-    public SortMerge(AttrType in1[],
-                     int len_in1,
-                     short s1_sizes[],
-                     AttrType in2[],
-                     int len_in2,
-                     short s2_sizes[],
+    public SortMergeNew(AttrType in1[],
+                        int len_in1,
+                        short s1_sizes[],
+                        AttrType in2[],
+                        int len_in2,
+                        short s2_sizes[],
 
-                     int join_col_in1,
-                     int sortFld1Len,
-                     int join_col_in2,
-                     int sortFld2Len,
+                        int join_col_in1,
+                        int sortFld1Len,
+                        int join_col_in2,
+                        int sortFld2Len,
 
-                     int amt_of_mem,
-                     MapIterator am1,
-                     MapIterator am2,
+                        int amt_of_mem,
+                        MapIterator am1,
+                        MapIterator am2,
 
-                     boolean in1_sorted,
-                     boolean in2_sorted,
-                     MapOrder order,
+                        boolean in1_sorted,
+                        boolean in2_sorted,
+                        MapOrder order,
 
-                     CondExpr outFilter[],
-                     FldSpec proj_list[],
-                     int n_out_flds
+                        CondExpr outFilter[],
+                        FldSpec proj_list[],
+                        int n_out_flds
     )
             throws JoinNewFailed,
             JoinLowMemory,
@@ -132,7 +137,7 @@ public class SortMerge extends MapIterator implements GlobalConst {
             try {
                 bigt.mapInsertOrder = false;
                 bigt.orderType = 1;
-                p_i1 = new SortMap(bigt.BIGT_ATTR_TYPES, (short) 4,bigt.BIGT_STR_SIZES, am1, join_col_in1, order,sortFld1Len, amt_of_mem / 2);
+                p_i1 = new SortMap(bigt.BIGT_ATTR_TYPES, (short) 4,bigt.BIGT_STR_SIZES, am1, join_col_in1, order, sortFld1Len,amt_of_mem / 2 );
             } catch (Exception e) {
                 throw new SortException(e, "Sort failed");
             }
@@ -142,14 +147,13 @@ public class SortMerge extends MapIterator implements GlobalConst {
             try {
                 bigt.mapInsertOrder = false;
                 bigt.orderType = 1;
-                p_i2 = new SortMap(bigt.BIGT_ATTR_TYPES, (short) 4, bigt.BIGT_STR_SIZES, am2, join_col_in2, order,sortFld2Len, amt_of_mem/2);
+                p_i2 = new SortMap(bigt.BIGT_ATTR_TYPES, (short) 4,bigt.BIGT_STR_SIZES, am2, join_col_in2, order, sortFld2Len,amt_of_mem/2);
             } catch (Exception e) {
                 throw new SortException(e, "Sort failed");
             }
         }
 
         OutputFilter = outFilter;
-        _order = order;
         jc_in1 = join_col_in1;
         jc_in2 = join_col_in2;
         get_from_in1 = true;
@@ -174,10 +178,10 @@ public class SortMerge extends MapIterator implements GlobalConst {
             throw new JoinLowMemory("SortMerge.java: memory not enough");
 
         try {
-            TempMap1.setHdr( (short)4,_in1, s1_sizes); //ask
-            map1.setHdr((short)4,_in1, s1_sizes);//ask
-            TempMap2.setHdr((short)4,_in2, s2_sizes);//ask
-            map2.setHdr((short)4,_in2, s2_sizes);//ask
+            TempMap1.setHdr( (short)4,_in1, s1_sizes);
+            map1.setHdr((short)4,_in1, s1_sizes);
+            TempMap2.setHdr((short)4,_in2, s2_sizes);
+            map2.setHdr((short)4,_in2, s2_sizes);
         } catch (Exception e) {
             throw new SortException(e, "Set header failed");
         }
@@ -252,7 +256,7 @@ public class SortMerge extends MapIterator implements GlobalConst {
             Exception {
 
         int comp_res;
-        Map _map1, _map2;
+       Map _map1, _map2;
         if (done) return null;
 
         while (true) {
@@ -274,8 +278,8 @@ public class SortMerge extends MapIterator implements GlobalConst {
                 // is ascending or descending,
                 // this loop will be modified.
                 comp_res = MapUtils.CompareMapWithMap(map1, map2, jc_in1);
-                while ((comp_res < 0 && _order.mapOrder == MapOrder.Ascending) ||
-                        (comp_res > 0 && _order.mapOrder == MapOrder.Descending)) {
+                while ((comp_res < 0 && _order.mapOrder == TupleOrder.Ascending) ||
+                        (comp_res > 0 && _order.mapOrder == TupleOrder.Descending)) {
                     if ((map1 = p_i1.get_next()) == null) {
                         done = true;
                         return null;
@@ -285,8 +289,8 @@ public class SortMerge extends MapIterator implements GlobalConst {
                 }
 
                 comp_res =  MapUtils.CompareMapWithMap(map1, map2, jc_in1);
-                while ((comp_res > 0 && _order.mapOrder == MapOrder.Ascending) ||
-                        (comp_res < 0 && _order.mapOrder == MapOrder.Descending)) {
+                while ((comp_res > 0 && _order.mapOrder == TupleOrder.Ascending) ||
+                        (comp_res < 0 && _order.mapOrder == TupleOrder.Descending)) {
                     if ((map2 = p_i2.get_next()) == null) {
                         done = true;
                         return null;
@@ -399,3 +403,5 @@ public class SortMerge extends MapIterator implements GlobalConst {
     }
 
 }
+
+
