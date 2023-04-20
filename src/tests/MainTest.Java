@@ -108,6 +108,11 @@ class MainTest {
                     case 3:
                     case 4:
                     case 5:
+                        System.out.println("FORMAT: rowsort INBTNAME OUTBTNAME ROWORDER COLUMNNAME NUMBUF");
+                        System.out.println("ROWORDER: \n 1. Ascending\n 2. Descending" );
+                        input = getInput();
+                        RowSort rowSort = new RowSort(input[1], input[2], Integer.parseInt(input[3]), input[4], (int)((Integer.parseInt(input[5])*3)/4));
+                        rowSort.run();
                     case 6:
                         System.out.println("FORMAT : getCounts BIGTABLENAME NUMBUF");
                         input = getInput();
