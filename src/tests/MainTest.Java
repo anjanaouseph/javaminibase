@@ -1,7 +1,10 @@
 package tests;
 
-import BigT.*;
-import global.SystemDefs;
+import BigT.BatchInsert;
+import BigT.GetCounts;
+import BigT.Query;
+import BigT.bigt;
+import diskmgr.PCounter;
 import iterator.MapUtils;
 
 import java.io.BufferedReader;
@@ -88,7 +91,7 @@ class MainTest {
                         System.out.println("FORMAT : batchinsert DATAFILENAME TYPE BIGTABLENAME NUMBUF");
                         input = getInput();
                         if (input != null && input.length == 5) {
-                            SystemDefs.JavabaseDB.pcounter.initialize();//to set the read and write counters to 0
+                            PCounter.initialize();//to set the read and write counters to 0
                             new BatchInsert(input[1], Integer.parseInt(input[2]), input[3], Integer.parseInt(input[4]));
                         } else {
                             System.out.println("Improper input given. Try again !");
@@ -100,7 +103,7 @@ class MainTest {
                         System.out.println("FORMAT : query BIGTABLENAME ORDERTYPE ROWFILTER COLUMNFILTER VALUEFILTER NUMBUF");
                         input = getInput();
                         if (input != null && input.length == 7) {
-                            SystemDefs.JavabaseDB.pcounter.initialize();//to set the read and write counters to 0
+                            PCounter.initialize();//to set the read and write counters to 0
                             new Query(input[1],Integer.parseInt(input[2]),input[3],input[4],input[5],Integer.parseInt(input[6]));
 
                         } else {
@@ -123,7 +126,7 @@ class MainTest {
                         System.out.println("FORMAT : getCounts BIGTABLENAME NUMBUF");
                         input = getInput();
                         if (input != null && input.length == 3) {
-                            SystemDefs.JavabaseDB.pcounter.initialize();//to set the read and write counters to 0
+                            PCounter.initialize();//to set the read and write counters to 0
                             new GetCounts(input[1], Integer.parseInt(input[2]));
                         } else {
                             System.out.println("Improper input given. Try again !");

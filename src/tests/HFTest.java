@@ -756,7 +756,7 @@ class HFDriver extends TestDriver implements GlobalConst {
 	protected boolean test6() {
 		boolean status = OK;
 		try {
-			SystemDefs.JavabaseDB.pcounter.initialize();
+			PCounter.initialize();
 			System.out.println("\n  Test 6 Map: Insert and scan fixed-size map records\n");
 			Map[] mapArr = generateMaps();
 
@@ -888,8 +888,8 @@ class HFDriver extends TestDriver implements GlobalConst {
 
 			if (status == OK)
 				System.out.println("  Test 6: Map record insertion completed successfully");
-			int read_counter = SystemDefs.JavabaseDB.pcounter.getRCounter();
-			int write_counter = SystemDefs.JavabaseDB.pcounter.getWCounter();
+			int read_counter = PCounter.getRCounter();
+			int write_counter = PCounter.getWCounter();
 			System.out.println("Read Counter: " + read_counter);
 			System.out.println("Write Counter: " + write_counter);
 		} catch (Exception e) {
@@ -902,7 +902,7 @@ class HFDriver extends TestDriver implements GlobalConst {
 	protected boolean test7() {
 
 		System.out.println("\n  Test 7: Delete map record\n");
-		SystemDefs.JavabaseDB.pcounter.initialize();
+		PCounter.initialize();
 		boolean status = OK;
 		Scan scan = null;
 		MID mid = new MID();
@@ -1040,8 +1040,8 @@ class HFDriver extends TestDriver implements GlobalConst {
 
 		if (status == OK)
 			System.out.println("  Test 7 completed successfully.\n");
-		int read_counter = SystemDefs.JavabaseDB.pcounter.getRCounter();
-		int write_counter = SystemDefs.JavabaseDB.pcounter.getWCounter();
+		int read_counter = PCounter.getRCounter();
+		int write_counter = PCounter.getWCounter();
 		System.out.println("Read Counter: " + read_counter);
 		System.out.println("Write Counter: " + write_counter);
 		return status;
@@ -1549,7 +1549,7 @@ class DummyRecord {
 	 * constructor: translate a tuple to a DummyRecord object
 	 * it will make a copy of the data in the tuple
 	 *
-	 * @param atuple: the input tuple
+	 * @param : the input tuple
 	 */
 	public DummyRecord(Tuple _atuple)
 			throws java.io.IOException {
