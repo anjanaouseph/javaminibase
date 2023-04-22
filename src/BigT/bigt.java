@@ -549,7 +549,7 @@ public class bigt {
                 });
                 mid = duplicateMaps.get(0).getMid();
                 heapFiles.get(duplicateMaps.get(0).getHeapFileIndex()).deleteRecordMap(mid);
-                duplicateMaps.remove(0);
+                duplicateMaps.remove(0);//delete oldest time stamp
             }
             prevKey = curKey;
             curMapPair = index_scan.get_next_mid();

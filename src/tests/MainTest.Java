@@ -2,6 +2,7 @@ package tests;
 
 import BigT.*;
 import global.SystemDefs;
+import iterator.MapUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -110,9 +111,8 @@ class MainTest {
                     case 4: System.out.println("FORMAT : ROWJOIN BTNAME1 BTNAME2 OUTBTNAME COLUMNFILTER JOINTYPE NUMBUF");
                             input = getInput();
                             if (input != null && input.length == 7) {
-                                SystemDefs.JavabaseDB.pcounter.initialize();//to set the read and write counters to 0
-                                Stream leftStream = new bigt(input[1]).openStream(input[1],1,"*","*","*", Integer.parseInt(input[6]));
-                                new rowJoin(Integer.parseInt(input[6]),leftStream,input[2],input[4],input[3],input[1],input[5]);
+
+                                MapUtils.rowJoinWrapper(Integer.parseInt(input[6]),input[1],input[2],input[3],input[4],input[5]);
 
                             } else {
                                 System.out.println("Improper input given. Try again !");

@@ -87,6 +87,22 @@ public class SystemDefs {
         }
     }
 
+//    public void setNumBuffers(int numBuf) throws Exception {
+//        for (int i = 0; i < numBuffers; ++i) {
+//            frmeTable[i].pin_cnt = 0;
+//        }
+//        flushAllPages();
+//        hashTable.clearHashTable();
+//        this.numBuffers = numBuf;
+//        frmeTable = new FrameDesc[numBuffers];
+//        for (int i = 0; i < numBuffers; i++)  // initialize frameTable
+//            frmeTable[i] = new FrameDesc();
+//        bufPool = new byte[numBuffers][MAX_SPACE];
+//        replacer = new Clock(this);
+//        replacer.setBufferManager(this);
+//    }
+
+
     public void changeNumberOfBuffers(int num_pgs, String replacement_policy)throws PageUnpinnedException,
             PagePinnedException, PageNotFoundException, HashOperationException, BufMgrException, IOException {
         JavabaseBM.flushAllPagesForcibly();

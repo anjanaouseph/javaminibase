@@ -66,7 +66,7 @@ public class SortMergeNew extends MapIterator implements GlobalConst {
      * @param am2          access method for right input to join
      * @param in1_sorted   is am1 sorted?
      * @param in2_sorted   is am2 sorted?
-     * @param order        the order of the tuple: assending or desecnding?
+     * @param order        the order of the map: assending or desecnding?
      * @param outFilter  Ptr to the output filter
      * @param proj_list    shows what input fields go where in the output tuple
      * @param n_out_flds   number of outer relation fileds
@@ -105,15 +105,15 @@ public class SortMergeNew extends MapIterator implements GlobalConst {
             SortException,
             TupleUtilsException,
             IOException {
-        _in1 = new AttrType[in1.length];
-        _in2 = new AttrType[in2.length];
-        System.arraycopy(in1, 0, _in1, 0, in1.length);
-        System.arraycopy(in2, 0, _in2, 0, in2.length);
-        in1_len = len_in1;
+        _in1 = new AttrType[in1.length];// initialize var _in1
+        _in2 = new AttrType[in2.length];//// initialize var _in2
+        System.arraycopy(in1, 0, _in1, 0, in1.length);//copy contents of array
+        System.arraycopy(in2, 0, _in2, 0, in2.length);//copy contents of array
+        in1_len = len_in1;//copy length also. no of columns in R
         in2_len = len_in2;
 
         JMap = new Map();
-        AttrType[] Jtypes = new AttrType[n_out_flds];
+        AttrType[] Jtypes = new AttrType[n_out_flds];//initialize join type
         short[] ts_size = null;
         perm_mat = proj_list;
         nOutFlds = n_out_flds;
@@ -126,14 +126,14 @@ public class SortMergeNew extends MapIterator implements GlobalConst {
         int n_strs2 = 0;
 
         for (int i = 0; i < len_in2; i++) if (_in2[i].attrType == AttrType.attrString) n_strs2++;
-        inner_str_sizes = new short[n_strs2];
+        inner_str_sizes = new short[n_strs2];//stores inner string sizes
 
-        for (int i = 0; i < n_strs2; i++) inner_str_sizes[i] = s2_sizes[i];
+        for (int i = 0; i < n_strs2; i++) inner_str_sizes[i] = s2_sizes[i];//copy length of string sizes in S to inner_Str_sizes
 
-        p_i1 = am1;
-        p_i2 = am2;
+        p_i1 = am1;//left iterator
+        p_i2 = am2;//right iterator
 
-        if (!in1_sorted) {
+        if (!in1_sorted) {//if not sorted then sort
             try {
                 bigt.mapInsertOrder = false;
                 bigt.orderType = 1;
@@ -143,7 +143,7 @@ public class SortMergeNew extends MapIterator implements GlobalConst {
             }
         }
 
-        if (!in2_sorted) {
+        if (!in2_sorted) {//if not sorted then sort
             try {
                 bigt.mapInsertOrder = false;
                 bigt.orderType = 1;
@@ -178,7 +178,7 @@ public class SortMergeNew extends MapIterator implements GlobalConst {
             throw new JoinLowMemory("SortMerge.java: memory not enough");
 
         try {
-            TempMap1.setHdr( (short)4,_in1, s1_sizes);
+            TempMap1.setHdr( (short)4,_in1, s1_sizes);//assigning to temperorary maps
             map1.setHdr((short)4,_in1, s1_sizes);
             TempMap2.setHdr((short)4,_in2, s2_sizes);
             map2.setHdr((short)4,_in2, s2_sizes);

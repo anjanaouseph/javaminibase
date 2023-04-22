@@ -19,8 +19,8 @@ import java.io.*;
  * get successive tuples for the final merge.
  */
 public class SortMerge extends MapIterator implements GlobalConst {
-    private AttrType _in1[], _in2[];
-    private int in1_len, in2_len;
+    private AttrType _in1[], _in2[];//in1[] and in2[]: arrays of attribute types for the two input relations, respectively.
+    private int in1_len, in2_len;//
     private MapIterator p_i1,        // pointers to the two iterators. If the
             p_i2;               // inputs are sorted, then no sorting is done
     private MapOrder _order;                      // The sorting order.
@@ -100,6 +100,11 @@ public class SortMerge extends MapIterator implements GlobalConst {
             SortException,
             TupleUtilsException,
             IOException {
+
+        //AttrType in1[], int len_in1, short s1_sizes[] are arrays of attribute types, the length of the arrays, and the sizes of the string fields
+        // for the first input relation, respectively.
+        //int join_col_in1, int sortFld1Len, int join_col_in2,
+        // int sortFld2Len are the join columns and their corresponding lengths for the two input relations.
         _in1 = new AttrType[in1.length];
         _in2 = new AttrType[in2.length];
         System.arraycopy(in1, 0, _in1, 0, in1.length);

@@ -51,7 +51,7 @@ public class BatchInsert {
 
             if (SystemDefs.JavabaseDB == null) {
                 // Initialize the data base.
-                String dbpath = "/tmp/"+ bigTableName + "_" + type  + ".minibase-db";
+                String dbpath = "/tmp/"+ bigTableName+ ".minibase-db";
                 SystemDefs sysdef = new SystemDefs( dbpath, 1000000, numbuf*5, "Clock" );
             }
 
