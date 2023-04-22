@@ -94,106 +94,19 @@ public class BatchInsert {
                 map.setTimeStamp(Integer.parseInt(row[2]));
                 map.setValue(row[3]);
 
-               table.insertMap(map, insertTypeFileIndex);
+                MID mid = table.insertMap(map, type);
+
+                if (type > 1)
+                    table.insertIndex(mid, map, type);
+
+                table.insertIndex(mid, map, 0);
             }
 
-            Stream tempStream = new Stream(table.getHeapFileName(insertTypeFileIndex), 1, "*", "*", "*", numbuf/2, false);
-            Map reading = tempStream.getNext();
-
-            String oldRowLabel = null;
-            String oldColumnLabel = null;
-
-            if (reading != null) {
-                oldRowLabel = reading.getRowLabel();
-                oldColumnLabel = reading.getColumnLabel();
-            }
-
-            List<Map> tempMaps = new ArrayList<>();
-
-            int noDuplicateRecordCount = 0;
-
-            while(reading != null) {
-
-                if (!reading.getRowLabel().equals(oldRowLabel) || !reading.getColumnLabel().equals(oldColumnLabel)) {
-                    oldRowLabel = reading.getRowLabel();
-                    oldColumnLabel = reading.getColumnLabel();
-
-                    if (tempMaps.size() > 3) {
-                        // This means we have to remove few maps as we only have to maintain at most 3 maps.
-
-                        // Sorting the maps in descending order
-                        Collections.sort(tempMaps, (a, b) -> {
-                            try {
-                                return b.getTimeStamp() - a.getTimeStamp();
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        });
-
-                        // Insert the first 3
-                        int i = 0;
-                        while(i < 3) {
-                            // insert the rows into the table
-                            Map map = new Map();
-                            map.setDefaultHdr();
-                            map.setRowLabel(tempMaps.get(i).getRowLabel());
-                            map.setColumnLabel(tempMaps.get(i).getColumnLabel());
-                            map.setTimeStamp(tempMaps.get(i).getTimeStamp());
-                            map.setValue(tempMaps.get(i).getValue());
-
-                            MID mid = table.insertMap(map, type);
-                            if (type > 1)
-                                table.insertIndex(mid, map, type);
-
-                            i++;
-                            noDuplicateRecordCount++;
-                        }
-                    } else {
-                        // Just insert all the records
-                        int i = 0;
-                        while(i < tempMaps.size()) {
-                            // insert the rows into the table
-                            Map map = new Map();
-                            map.setDefaultHdr();
-                            map.setRowLabel(tempMaps.get(i).getRowLabel());
-                            map.setColumnLabel(tempMaps.get(i).getColumnLabel());
-                            map.setTimeStamp(tempMaps.get(i).getTimeStamp());
-                            map.setValue(tempMaps.get(i).getValue());
-
-                            MID mid = table.insertMap(map, type);
-                            if (type > 1)
-                                table.insertIndex(mid, map, type);
-
-                            i++;
-                            noDuplicateRecordCount++;
-                        }
-                    }
-
-                    // clear tempMap
-                    tempMaps.clear();
-                }
-
-
-                // Add it to the list
-                Map map = new Map();
-                map.setDefaultHdr();
-                map.setRowLabel(reading.getRowLabel());
-                map.setColumnLabel(reading.getColumnLabel());
-                map.setTimeStamp(reading.getTimeStamp());
-                map.setValue(reading.getValue());
-
-                tempMaps.add(map);
-
-                reading = tempStream.getNext();
-            }
-
-            table.getHeapFile(insertTypeFileIndex).deleteFileMap();
-            table.heapFiles.set(insertTypeFileIndex, new Heapfile(table.heapFileNames.get(insertTypeFileIndex)));
-            tempStream.closestream();
+            int noDuplicateRecordCount = table.deleteDuplicateRecords();
 
             // Stats
-            System.out.println("TOTAL RECORDS : " + recordNum);
-            System.out.println("INSERTED NON DUPLICATE RECORDS : " + noDuplicateRecordCount);
+            System.out.println("TOTAL RECORDS READ FROM THE FILE : " + recordNum);
+            System.out.println("TOTAL NON DUPLICATE RECORDS : " + noDuplicateRecordCount);
             System.out.println("READ COUNT : " + PCounter.rCounter);
             System.out.println("WRITE COUNT : " + PCounter.wCounter);
         } catch (Exception exception) {

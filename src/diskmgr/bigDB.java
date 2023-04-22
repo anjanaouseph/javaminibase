@@ -11,13 +11,12 @@ public class bigDB implements GlobalConst {
 
 
     private static final int bits_per_page = MAX_SPACE * 8;
-    public static PCounter pcounter;
 
 
     /**
      * Open the database with the given name.
      *
-     * @param name DB_name
+     * @param fname DB_name
      * @throws IOException                I/O errors
      * @throws FileIOException            file I/O error
      * @throws InvalidPageNumberException invalid page number
@@ -54,7 +53,6 @@ public class bigDB implements GlobalConst {
      * default constructor.
      */
     public bigDB() {
-        pcounter = new PCounter();
     }
 
     /**
@@ -62,8 +60,8 @@ public class bigDB implements GlobalConst {
      * Create a database with the specified number of pages where the page
      * size is the default page size.
      *
-     * @param name      DB name
-     * @param num_pages number of pages in DB
+     * @param fname      DB name
+     * @param num_pgs number of pages in DB
      * @throws IOException                I/O errors
      * @throws InvalidPageNumberException invalid page number
      * @throws FileIOException            file I/O error
@@ -157,7 +155,7 @@ public class bigDB implements GlobalConst {
         byte[] buffer = apage.getpage();  //new byte[MINIBASE_PAGESIZE];
         try {
             fp.read(buffer);
-            pcounter.readIncrement();
+            PCounter.readIncrement();
         } catch (IOException e) {
             throw new FileIOException(e, "DB file I/O error");
         }
@@ -187,7 +185,7 @@ public class bigDB implements GlobalConst {
         // Write the appropriate number of bytes.
         try {
             fp.write(apage.getpage());
-            pcounter.writeIncrement();
+            PCounter.writeIncrement();
         } catch (IOException e) {
             throw new FileIOException(e, "DB file I/O error");
         }
@@ -221,7 +219,7 @@ public class bigDB implements GlobalConst {
      * user specified run_size
      *
      * @param start_page_num the starting page id of the run of pages
-     * @param run_size       the number of page need allocated
+     * @param runsize       the number of page need allocated
      * @throws OutOfSpaceException        No space left
      * @throws InvalidRunSizeException    invalid run size
      * @throws InvalidPageNumberException invalid page number
@@ -239,7 +237,6 @@ public class bigDB implements GlobalConst {
 
         if (runsize < 0) throw new InvalidRunSizeException(null, "Negative run_size");
 
-        int run_size = runsize;
         int num_map_pages = (num_pages + bits_per_page - 1) / bits_per_page;
         int current_run_start = 0;
         int current_run_length = 0;
@@ -271,7 +268,7 @@ public class bigDB implements GlobalConst {
             // one steps through each byte's bits.
 
             for (; num_bits_this_page > 0
-                    && current_run_length < run_size; ++byteptr) {// start forloop02
+                    && current_run_length < runsize; ++byteptr) {// start forloop02
 
 
                 Integer intmask = new Integer(1);
@@ -279,7 +276,7 @@ public class bigDB implements GlobalConst {
                 byte tmpmask = mask.byteValue();
 
                 while (mask.intValue() != 0 && (num_bits_this_page > 0)
-                        && (current_run_length < run_size)) {
+                        && (current_run_length < runsize)) {
                     if ((pagebuf[byteptr] & tmpmask) != 0) {
                         current_run_start += current_run_length + 1;
                         current_run_length = 0;
@@ -299,9 +296,9 @@ public class bigDB implements GlobalConst {
 
         }// end of forloop01
 
-        if (current_run_length >= run_size) {
+        if (current_run_length >= runsize) {
             start_page_num.pid = current_run_start;
-            set_bits(start_page_num, run_size, 1);
+            set_bits(start_page_num, runsize, 1);
 
             return;
         }
@@ -338,7 +335,6 @@ public class bigDB implements GlobalConst {
      * with run size = 1
      *
      * @param start_page_num the start pageId to be deallocate
-     * @param run_size       the number of pages to be deallocated
      * @throws InvalidRunSizeException    invalid run size
      * @throws InvalidPageNumberException invalid page number
      * @throws FileIOException            file I/O error
