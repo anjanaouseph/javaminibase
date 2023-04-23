@@ -108,11 +108,17 @@ class MainTest {
                     case 3:
                     case 4:
                     case 5:
-                        System.out.println("FORMAT: rowsort INBTNAME OUTBTNAME ROWORDER COLUMNNAME NUMBUF");
-                        System.out.println("ROWORDER: \n 1. Ascending\n 2. Descending" );
-                        input = getInput();
-                        RowSort rowSort = new RowSort(input[1], input[2], Integer.parseInt(input[3]), input[4], (int)((Integer.parseInt(input[5])*3)/4));
-                        rowSort.run();
+
+                            System.out.println("FORMAT: rowsort INBTNAME OUTBTNAME COLUMNNAME NUMBUF");
+                            input = getInput();
+                        if (input != null && input.length == 5) {
+                            SystemDefs.JavabaseDB.pcounter.initialize();
+                            RowSort rowSort = new RowSort(input[1], input[2], input[3], (int) ((Integer.parseInt(input[4]) * 3) / 4));
+                            rowSort.run();
+                        } else{
+                            System.out.println("Improper input given. Try again !");
+                        }
+                        break;
                     case 6:
                         System.out.println("FORMAT : getCounts BIGTABLENAME NUMBUF");
                         input = getInput();

@@ -18,7 +18,7 @@ public class RowSort{
     private String ColumnName;
     private MapOrder mapOrder;
 
-    public RowSort(String sourceTableName, String resultTable, int rowOrder, String ColumnName, int n_pages)
+    public RowSort(String sourceTableName, String resultTable, String ColumnName, int n_pages)
             throws Exception{
         this.numBuf = n_pages;
         this.sourceTableName = sourceTableName;
@@ -26,11 +26,7 @@ public class RowSort{
         this.sourceTable = new bigt(sourceTableName, 2);// insert type false
         this.resultTable = new bigt(resultTable, 2); // insert type false
 
-        if(rowOrder == 1){
             mapOrder = new MapOrder(MapOrder.Ascending);
-        }else if(rowOrder == 2){
-            mapOrder = new MapOrder(MapOrder.Descending);
-        }
     }
 
     public void run() throws Exception {
