@@ -36,7 +36,7 @@ public class rowJoinNew {
         this.outBigTName = outBigTName;
         this.leftName = leftName;
 
-        if(this.JoinType.equalsIgnoreCase("one")) {
+        if(this.JoinType.equalsIgnoreCase("1")) {
 
             System.out.println("............You have chosen SortMergeJoin...............");
             System.out.println("............Implementing SortMergeJoin...............");
