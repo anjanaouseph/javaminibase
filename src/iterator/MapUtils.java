@@ -5,7 +5,6 @@ import diskmgr.PCounter;
 import global.AttrType;
 import global.SystemDefs;
 import heap.FieldNumberOutOfBoundException;
-import heap.Tuple;
 
 import java.io.IOException;
 
@@ -348,6 +347,7 @@ public class MapUtils {
         return res_str_sizes;
     }
     public static void rowJoinWrapper(int numBuf, String btName1, String btName2, String outBtName, String columnFilter,String joinType)throws Exception {
+
         rowJoinNew rj;
 
         // Initialize the databases.
@@ -366,7 +366,7 @@ public class MapUtils {
         Stream leftstream = new bigt(btName1).openStream(btName1, 1,"*", columnFilter, "*",numBuf);
         rj = new rowJoinNew(20, leftstream, btName2, columnFilter, outBtName, btName1,joinType);
 
-        System.out.println("Query results => ");
+        System.out.println("\n Query results => ");
         new Query(outBtName, 1, "*", "*", "*", numBuf);
 
         System.out.println("\n=======================================\n");
