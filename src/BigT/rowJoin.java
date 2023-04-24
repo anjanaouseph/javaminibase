@@ -42,10 +42,14 @@ public class rowJoin {
             System.out.println("............Implementing SortMergeJoin...............");
             SortMergeJoin();
 
-        }else{
+        }else if(this.JoinType.equalsIgnoreCase("1")) {
             System.out.println("............You have chosen NestedLoopJoin...............");
             System.out.println("............Implementing NestedLoopJoin...............");
             nestedLoopJoin();
+        }
+        else {
+            System.out.println("You Chosen Wrong Option. Please chose option 1 for" +
+                    "Sort Merge Join or Option 2 for Nested Loop Join");
         }
 
     }
