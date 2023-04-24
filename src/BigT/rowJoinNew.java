@@ -42,7 +42,7 @@ public class rowJoinNew {
             System.out.println("............Implementing SortMergeJoin...............");
             SortMergeJoin();
 
-        } else{
+        }else{
             System.out.println("............You have chosen NestedLoopJoin...............");
             System.out.println("............Implementing NestedLoopJoin...............");
             nestedLoopJoin();
@@ -53,16 +53,7 @@ public class rowJoinNew {
 
     public void SortMergeJoin() throws Exception {
 
-
-
-        if (leftStream.getNext() == null || rightStream.getNext() == null)//if no column label matches then either one will be emtpty
-        {
-            bigt table = new bigt(this.outBigTName, 1);//creates an empty table of type 1
-
-        }
-        else {
             try {
-                bigt table = new bigt(this.outBigTName, 1);
 
                 ArrayList<Map> outerRelation = new ArrayList<>();
                 ArrayList<Map> innerRelation = new ArrayList<>();
@@ -71,6 +62,7 @@ public class rowJoinNew {
                 while (map3 != null) {
                     Map newMap = new Map(map3); // Create a new map object with the same entries as map3
                     outerRelation.add(newMap); // Add the new map object to the list
+                    newMap.print();
                     map3 = leftStream.getNext(); // Get the next map from the stream
                 }
                 leftStream.closestream();
@@ -79,107 +71,74 @@ public class rowJoinNew {
                 while (map4 != null) {
                     Map newMap = new Map(map4); // Create a new map object with the same entries as map3
                     innerRelation.add(newMap);
+                    newMap.print();
                     map4 = rightStream.getNext();
                 }
 
                 rightStream.closestream();
 
-                for (Map outerRow : outerRelation) {
+                if( outerRelation.get(0).getColumnLabel().isEmpty() || innerRelation.get(0).getColumnLabel().isEmpty()) {
 
-                    for (Map innerRow : innerRelation) {
+                    bigt table = new bigt(this.outBigTName, 1);
+                }
+                else {
 
-                        if (outerRow.getValue().equals(innerRow.getValue()) && outerRow.getTimeStamp() != innerRow.getTimeStamp()) {
-                            Map map1 = new Map();
-                            map1.setDefaultHdr();
-                            map1.setRowLabel(outerRow.getRowLabel() + ":" + innerRow.getRowLabel());
-                            map1.setColumnLabel(outerRow.getColumnLabel());
-                            map1.setTimeStamp(outerRow.getTimeStamp());
-                            map1.setValue(outerRow.getValue());
+                    bigt table = new bigt(this.outBigTName, 1);
 
-                            Map map2 = new Map();
-                            map2.setDefaultHdr();
-                            map2.setRowLabel(outerRow.getRowLabel() + ":" + innerRow.getRowLabel());
-                            map2.setColumnLabel(outerRow.getColumnLabel());
-                            map2.setTimeStamp(innerRow.getTimeStamp());
-                            map2.setValue(outerRow.getValue());
+                    for (Map outerRow : outerRelation) {
 
-                            MID mid1 = table.insertMap(map1, 1);
-                            table.insertIndex(mid1, map1, 0);
-                            MID mid2 = table.insertMap(map2, 1);
-                            table.insertIndex(mid2, map2, 0);
+                        for (Map innerRow : innerRelation) {
 
-                        } else if (outerRow.getValue().equals(innerRow.getValue()) && outerRow.getTimeStamp() == innerRow.getTimeStamp()) {
+                            if (outerRow.getValue().equals(innerRow.getValue()) && outerRow.getTimeStamp() != innerRow.getTimeStamp()) {
+                                Map map1 = new Map();
+                                map1.setDefaultHdr();
+                                map1.setRowLabel(outerRow.getRowLabel() + ":" + innerRow.getRowLabel());
+                                map1.setColumnLabel(outerRow.getColumnLabel());
+                                map1.setTimeStamp(outerRow.getTimeStamp());
+                                map1.setValue(outerRow.getValue());
 
-                            Map map1 = new Map();
-                            map1.setDefaultHdr();
-                            map1.setRowLabel(outerRow.getRowLabel() + ":" + innerRow.getRowLabel());
-                            map1.setColumnLabel(outerRow.getColumnLabel());
-                            map1.setTimeStamp(outerRow.getTimeStamp());
-                            map1.setValue(outerRow.getValue());
+                                Map map2 = new Map();
+                                map2.setDefaultHdr();
+                                map2.setRowLabel(outerRow.getRowLabel() + ":" + innerRow.getRowLabel());
+                                map2.setColumnLabel(outerRow.getColumnLabel());
+                                map2.setTimeStamp(innerRow.getTimeStamp());
+                                map2.setValue(outerRow.getValue());
 
-                            MID mid1 = table.insertMap(map1, 1);
-                            table.insertIndex(mid1, map1, 0);
+                                MID mid1 = table.insertMap(map1, 1);
 
+                                MID mid2 = table.insertMap(map2, 1);
+                                table.insertIndex(mid2, map2, 0);
+
+
+                            } else if (outerRow.getValue().equals(innerRow.getValue()) && outerRow.getTimeStamp() == innerRow.getTimeStamp()) {
+
+                                Map map1 = new Map();
+                                map1.setDefaultHdr();
+                                map1.setRowLabel(outerRow.getRowLabel() + ":" + innerRow.getRowLabel());
+                                map1.setColumnLabel(outerRow.getColumnLabel());
+                                map1.setTimeStamp(outerRow.getTimeStamp());
+                                map1.setValue(outerRow.getValue());
+
+                                MID mid1 = table.insertMap(map1, 1);
+                                table.insertIndex(mid1, map1, 0);
+
+
+                            }
                         }
                     }
-                }
-                int noDuplicateRecordCount = table.deleteDuplicateRecords();
 
-                System.out.println("TOTAL NON DUPLICATE RECORDS : " + noDuplicateRecordCount);
-                System.out.println("READ COUNT : " + PCounter.rCounter);
-                System.out.println("WRITE COUNT : " + PCounter.wCounter);
+                    int noDuplicateRecordCount = table.deleteDuplicateRecords();
+                    System.out.println("TOTAL NON DUPLICATE RECORDS : " + noDuplicateRecordCount);
+                    System.out.println("READ COUNT : " + PCounter.rCounter);
+                    System.out.println("WRITE COUNT : " + PCounter.wCounter);
+                }
+
+
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
         }
-    }
-    public void CartesianJoin() throws Exception {
-        try {
-            bigt table = new bigt(this.outBigTName, 1);
-
-            ArrayList<Map> leftRelation = new ArrayList<>();
-            ArrayList<Map> rightRelation = new ArrayList<>();
-
-            Map map1 = leftStream.getNext();
-            while (map1 != null) {
-                Map newMap = new Map(map1); // Create a new map object with the same entries as map1
-                leftRelation.add(newMap); // Add the new map object to the list
-                map1 = leftStream.getNext(); // Get the next map from the stream
-            }
-            leftStream.closestream();
-
-            Map map2 = rightStream.getNext();
-            while (map2 != null) {
-                Map newMap = new Map(map2); // Create a new map object with the same entries as map2
-                rightRelation.add(newMap); // Add the new map object to the list
-                map2 = rightStream.getNext(); // Get the next map from the stream
-            }
-            rightStream.closestream();
-
-            for (Map leftRow : leftRelation) {
-                for (Map rightRow : rightRelation) {
-                    Map map = new Map();
-                    map.setDefaultHdr();
-                    map.setRowLabel(leftRow.getRowLabel() + ":" + rightRow.getRowLabel());
-                    map.setColumnLabel(leftRow.getColumnLabel());
-                    map.setValue(leftRow.getValue());
-                    map.setTimeStamp(rightRow.getTimeStamp());
-                    MID mid = table.insertMap(map, 1);
-                    table.insertIndex(mid, map, 0);
-                }
-            }
-
-            int noDuplicateRecordCount = table.deleteDuplicateRecords();
-
-            System.out.println("TOTAL NON DUPLICATE RECORDS : " + noDuplicateRecordCount);
-            System.out.println("READ COUNT : " + PCounter.rCounter);
-            System.out.println("WRITE COUNT : " + PCounter.wCounter);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-    }
-
-    public void nestedLoopJoin() throws Exception {
+        public void nestedLoopJoin() throws Exception {
         try {
             ArrayList<Map> outerRelation = new ArrayList<>();
             ArrayList<Map> innerRelation = new ArrayList<>();
@@ -248,8 +207,4 @@ public class rowJoinNew {
             exception.printStackTrace();
         }
     }
-
-
-
-
-}
+    }

@@ -3,8 +3,7 @@
 //import java.io.*;
 //
 //import global.*;
-//import bufmgr.*;
-//import diskmgr.*;
+//import bufmgr.*;//import diskmgr.*;
 //import heap.*;
 //import index.*;
 //import chainexception.*;
