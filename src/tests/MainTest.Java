@@ -130,8 +130,15 @@ class MainTest {
                         }
                         break;
                     case 7:
-                        System.out.println("This feature is not yet implemented !");
-                        System.out.println("Please choose again!!");
+                        System.out.println("FORMAT : createindex BTNAME TYPE");
+                        input = getInput();
+                        if (input != null && input.length == 3) {
+                            SystemDefs.JavabaseDB.pcounter.initialize();//to set the read and write counters to 0
+                        }
+                        else{
+                            System.out.println("Improper input given. Try again !");
+                        }
+                        break;
                 }
             } catch (Exception exception) {
                 exception.printStackTrace();
