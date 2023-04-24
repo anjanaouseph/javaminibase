@@ -1,6 +1,7 @@
 package tests;
 
 import BigT.*;
+import diskmgr.PCounter;
 import global.SystemDefs;
 
 import java.io.BufferedReader;
@@ -83,11 +84,10 @@ class MainTest {
                 switch (choice) {
                     case 1:
                         //batch insert
-                        // TODO: Make changes for batch insert.
                         System.out.println("FORMAT : batchinsert DATAFILENAME TYPE BIGTABLENAME NUMBUF");
                         input = getInput();
                         if (input != null && input.length == 5) {
-                            SystemDefs.JavabaseDB.pcounter.initialize();//to set the read and write counters to 0
+                            PCounter.initialize();//to set the read and write counters to 0
                             new BatchInsert(input[1], Integer.parseInt(input[2]), input[3], Integer.parseInt(input[4]));
                         } else {
                             System.out.println("Improper input given. Try again !");
@@ -98,7 +98,7 @@ class MainTest {
                         System.out.println("FORMAT : query BIGTABLENAME ORDERTYPE ROWFILTER COLUMNFILTER VALUEFILTER NUMBUF");
                         input = getInput();
                         if (input != null && input.length == 7) {
-                            SystemDefs.JavabaseDB.pcounter.initialize();//to set the read and write counters to 0
+                            PCounter.initialize();//to set the read and write counters to 0
                             new Query(input[1],Integer.parseInt(input[2]),input[3],input[4],input[5],Integer.parseInt(input[6]));
 
                         } else {
@@ -106,13 +106,23 @@ class MainTest {
                         }
                         break;
                     case 3:
+                        //map insert
+                        System.out.println("FORMAT : mapinsert RL CL VAL TS TYPE BIGTABLENAME NUMBUF");
+                        input = getInput();
+                        if (input != null && input.length == 8) {
+                            PCounter.initialize();//to set the read and write counters to 0
+                            new MapInsert(input[1], input[2], input[3], Integer.parseInt(input[4]), Integer.parseInt(input[5]), input[6], Integer.parseInt(input[7]));
+                        } else {
+                            System.out.println("Improper input given. Try again !");
+                        }
+                        break;
                     case 4:
                     case 5:
                     case 6:
                         System.out.println("FORMAT : getCounts BIGTABLENAME NUMBUF");
                         input = getInput();
                         if (input != null && input.length == 3) {
-                            SystemDefs.JavabaseDB.pcounter.initialize();//to set the read and write counters to 0
+                            PCounter.initialize();//to set the read and write counters to 0
                             new GetCounts(input[1], Integer.parseInt(input[2]));
                         } else {
                             System.out.println("Improper input given. Try again !");

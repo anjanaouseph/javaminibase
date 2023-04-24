@@ -618,16 +618,6 @@ public class bigt {
             this.getHeapFile(pair.getHeapFileIndex()).deleteRecordMap(pair.getMid());
         }
 
-
-        index_scan = new MapIndexScanBigT(new IndexType(IndexType.B_Index), this, this.indexFileNames.get(0), attrType, res_str_sizes, 4, 4, projlist, null, null, 1, false);
-
-        readingPair = index_scan.get_next_mid();
-
-        while (readingPair != null) {
-            System.out.println(readingPair.getMap().getRowLabel() + "%" + readingPair.getMap().getColumnLabel() + "%" + readingPair.getMap().getTimeStamp());
-            readingPair = index_scan.get_next_mid();
-        }
-
         return noDuplicateRecordCount;
     }
 
