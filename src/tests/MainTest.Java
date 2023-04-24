@@ -112,15 +112,15 @@ class MainTest {
                         break;
                     case 3:
                     case 4: System.out.println("FORMAT : ROWJOIN BTNAME1 BTNAME2 OUTBTNAME COLUMNFILTER JOINTYPE NUMBUF");
-                            input = getInput();
-                            if (input != null && input.length == 7) {
+                        input = getInput();
+                        if (input != null && input.length == 7) {
 
-                                MapUtils.rowJoinWrapper(Integer.parseInt(input[6]),input[1],input[2],input[3],input[4],input[5]);
+                            MapUtils.rowJoinWrapper(Integer.parseInt(input[6]),input[1],input[2],input[3],input[4],input[5]);
 
-                            } else {
-                                System.out.println("Improper input given. Try again !");
-                            }
-                            break;
+                        } else {
+                            System.out.println("Improper input given. Try again !");
+                        }
+                        break;
                     case 5:
                     case 6:
                         System.out.println("FORMAT : getCounts BIGTABLENAME NUMBUF");
@@ -145,4 +145,4 @@ class MainTest {
             }
         }
     }
-    }
+}
