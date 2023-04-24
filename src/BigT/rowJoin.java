@@ -6,7 +6,7 @@ import heap.Heapfile;
 
 import java.util.ArrayList;
 
-public class rowJoinNew {
+public class rowJoin {
     private String columnName;
     private int amtOfMem;
     private bigt rightBigT, resultantBigT;
@@ -21,7 +21,7 @@ public class rowJoinNew {
 
     private String JoinType;
 
-    public rowJoinNew(int amt_of_mem, Stream leftStream, String RightBigTName, String ColumnName, String outBigTName, String leftName, String JoinType) throws Exception {
+    public rowJoin(int amt_of_mem, Stream leftStream, String RightBigTName, String ColumnName, String outBigTName, String leftName, String JoinType) throws Exception {
 
         this.JoinType = JoinType;
         this.columnName = ColumnName;
@@ -58,7 +58,6 @@ public class rowJoinNew {
                 while (map3 != null) {
                     Map newMap = new Map(map3); // Create a new map object with the same entries as map3
                     outerRelation.add(newMap); // Add the new map object to the list
-                    newMap.print();
                     map3 = leftStream.getNext(); // Get the next map from the stream
                 }
                 leftStream.closestream();
@@ -67,13 +66,12 @@ public class rowJoinNew {
                 while (map4 != null) {
                     Map newMap = new Map(map4); // Create a new map object with the same entries as map3
                     innerRelation.add(newMap);
-                    newMap.print();
                     map4 = rightStream.getNext();
                 }
 
                 rightStream.closestream();
 
-                if( outerRelation.get(0).getColumnLabel().isEmpty() || innerRelation.get(0).getColumnLabel().isEmpty()) {
+                if( outerRelation.isEmpty() || innerRelation.isEmpty()) {
 
                     bigt table = new bigt(this.outBigTName, 1);
                 }

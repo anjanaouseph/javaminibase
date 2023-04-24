@@ -348,7 +348,7 @@ public class MapUtils {
     }
     public static void rowJoinWrapper(int numBuf, String btName1, String btName2, String outBtName, String columnFilter,String joinType)throws Exception {
 
-        rowJoinNew rj;
+        rowJoin rj;
 
         // Initialize the databases.
         if(SystemDefs.JavabaseDB == null) {
@@ -364,7 +364,7 @@ public class MapUtils {
         PCounter.initialize();
 
         Stream leftstream = new bigt(btName1).openStream(btName1, 1,"*", columnFilter, "*",numBuf);
-        rj = new rowJoinNew(20, leftstream, btName2, columnFilter, outBtName, btName1,joinType);
+        rj = new rowJoin(20, leftstream, btName2, columnFilter, outBtName, btName1,joinType);
 
         System.out.println("\n Query results => ");
         new Query(outBtName, 1, "*", "*", "*", numBuf);
