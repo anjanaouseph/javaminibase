@@ -42,6 +42,10 @@ public class rowJoinNew {
             System.out.println("............Implementing SortMergeJoin...............");
             SortMergeJoin();
 
+        } else{
+            System.out.println("............You have chosen CartesianJoin...............");
+            System.out.println("............Implementing CartesianJoin...............");
+            CartesianJoin();
         }
 
     }
@@ -129,4 +133,57 @@ public class rowJoinNew {
             }
         }
     }
+
+    public void CartesianJoin() throws Exception {
+
+        try {
+            // Create a new big table to store the result
+            bigt table = new bigt(this.outBigTName, 1);
+
+            ArrayList<Map> outerRelation = new ArrayList<>();
+            ArrayList<Map> innerRelation = new ArrayList<>();
+
+            // Read all the maps from the left table into memory
+            Map map1 = leftStream.getNext();
+            while (map1 != null) {
+                Map newMap = new Map(map1);
+                outerRelation.add(newMap);
+                map1 = leftStream.getNext();
+            }
+            leftStream.closestream();
+
+            // Read all the maps from the right table into memory
+            Map map2 = rightStream.getNext();
+            while (map2 != null) {
+                Map newMap = new Map(map2);
+                innerRelation.add(newMap);
+                map2 = rightStream.getNext();
+            }
+            rightStream.closestream();
+
+            // Perform the Cartesian Join operation
+            for (Map outerRow : outerRelation) {
+                for (Map innerRow : innerRelation) {
+                    Map map = new Map();
+                    map.setDefaultHdr();
+                    map.setRowLabel(outerRow.getRowLabel() + ":" + innerRow.getRowLabel());
+                    map.setColumnLabel(outerRow.getColumnLabel());
+                    map.setTimeStamp(outerRow.getTimeStamp());
+                    map.setValue(outerRow.getValue() + "," + innerRow.getValue());
+
+                    MID mid = table.insertMap(map, 1);
+                    table.insertIndex(mid, map, 0);
+                }
+            }
+
+            int recordCount = outerRelation.size() * innerRelation.size();
+            System.out.println("TOTAL RECORDS : " + recordCount);
+            System.out.println("READ COUNT : " + PCounter.rCounter);
+            System.out.println("WRITE COUNT : " + PCounter.wCounter);
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
+
 }
