@@ -1,6 +1,5 @@
 package BigT;
 
-import diskmgr.PCounter;
 import global.MID;
 import heap.Heapfile;
 
@@ -57,6 +56,12 @@ public class rowJoin {
 
     public void SortMergeJoin() throws Exception {
 
+        Heapfile heapfile = new Heapfile(this.outBigTName);
+        if(heapfile.getRecCntMap() != 0)//if heapfile has records in it
+        {
+            heapfile.deleteFileMap();//then delete that heapfile
+        }
+
             try {
 
                 ArrayList<Map> outerRelation = new ArrayList<>();
@@ -81,7 +86,7 @@ public class rowJoin {
 
                 if( outerRelation.isEmpty() || innerRelation.isEmpty()) {
 
-                    bigt table = new bigt(this.outBigTName, 1);
+                    bigt table = new bigt(this.outBigTName, 1);//create new
                 }
                 else {
 
@@ -130,9 +135,7 @@ public class rowJoin {
                     }
 
                     int noDuplicateRecordCount = table.deleteDuplicateRecords();
-                    System.out.println("TOTAL NON DUPLICATE RECORDS : " + noDuplicateRecordCount);
-                    System.out.println("READ COUNT : " + PCounter.rCounter);
-                    System.out.println("WRITE COUNT : " + PCounter.wCounter);
+
                 }
 
 
@@ -201,9 +204,6 @@ public class rowJoin {
                     }
                 }
                 int noDuplicateRecordCount = table.deleteDuplicateRecords();
-                System.out.println("TOTAL NON DUPLICATE RECORDS : " + noDuplicateRecordCount);
-                System.out.println("READ COUNT : " + PCounter.rCounter);
-                System.out.println("WRITE COUNT : " + PCounter.wCounter);
             }
         } catch (Exception exception) {
             exception.printStackTrace();

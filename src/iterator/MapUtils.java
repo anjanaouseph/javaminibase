@@ -369,10 +369,6 @@ public class MapUtils {
         System.out.println("\n Query results => ");
         new Query(outBtName, 1, "*", "*", "*", numBuf);
 
-        System.out.println("\n=======================================\n");
-        System.out.println("Reads : " + PCounter.rCounter);
-        System.out.println("Writes: " + PCounter.wCounter);
-        System.out.println("\n=======================================\n");
     }
 
 
