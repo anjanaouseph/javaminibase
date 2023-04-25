@@ -91,8 +91,12 @@ public class BatchInsert {
 
                 MID mid = table.insertMap(map, type);
 
-                if (type > 1)
-                    table.insertIndex(mid, map, type);
+                if (type > 1) {
+                    table.insertIndex(mid, map, 2);
+                    table.insertIndex(mid, map, 3);
+                    table.insertIndex(mid, map, 4);
+                    table.insertIndex(mid, map, 5);
+                }
 
                 table.insertIndex(mid, map, 0);
             }

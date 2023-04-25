@@ -87,7 +87,6 @@ class MainTest {
                 switch (choice) {
                     case 1:
                         //batch insert
-                        // TODO: Make changes for batch insert.
                         System.out.println("FORMAT : batchinsert DATAFILENAME TYPE BIGTABLENAME NUMBUF");
                         input = getInput();
                         if (input != null && input.length == 5) {
@@ -111,17 +110,39 @@ class MainTest {
                         }
                         break;
                     case 3:
+                    //map insert
+                        System.out.println("FORMAT : mapinsert RL CL VAL TS TYPE BIGTABLENAME NUMBUF");
+                        input = getInput();
+                        if (input != null && input.length == 8) {
+                            PCounter.initialize();//to set the read and write counters to 0
+                            new MapInsert(input[1], input[2], input[3], Integer.parseInt(input[4]), Integer.parseInt(input[5]), input[6], Integer.parseInt(input[7]));
+                        } else {
+                            System.out.println("Improper input given. Try again !");
+                        }
+                        break;
+
                     case 4: System.out.println("FORMAT : ROWJOIN BTNAME1 BTNAME2 OUTBTNAME COLUMNFILTER JOINTYPE NUMBUF");
                         input = getInput();
                         if (input != null && input.length == 7) {
 
                             MapUtils.rowJoinWrapper(Integer.parseInt(input[6]),input[1],input[2],input[3],input[4],input[5]);
-
-                        } else {
+                            } else {
                             System.out.println("Improper input given. Try again !");
                         }
                         break;
+
                     case 5:
+
+                            System.out.println("FORMAT: rowsort INBTNAME OUTBTNAME COLUMNNAME NUMBUF");
+                            input = getInput();
+                        if (input != null && input.length == 5) {
+                            PCounter.initialize();//to set the read and write counters to 0
+                            RowSort rowSort = new RowSort(input[1], input[2], input[3], (int) ((Integer.parseInt(input[4]) * 3) / 4));
+                            rowSort.run();
+                        } else{
+                            System.out.println("Improper input given. Try again !");
+                        }
+                        break;
                     case 6:
                         System.out.println("FORMAT : getCounts BIGTABLENAME NUMBUF");
                         input = getInput();
