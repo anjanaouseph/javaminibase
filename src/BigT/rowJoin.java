@@ -51,7 +51,7 @@ public class rowJoin {
 
     public void SortMergeJoin() throws Exception {
 
-        Heapfile heapfile = new Heapfile(this.outBigTName);
+        Heapfile heapfile = new Heapfile(this.outBigTName+"_1");
         if(heapfile.getRecCntMap() != 0)//if heapfile has records in it
         {
             heapfile.deleteFileMap();//then delete that heapfile
