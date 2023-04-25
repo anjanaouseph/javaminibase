@@ -37,20 +37,21 @@ public abstract class Iterator implements Flags {
    *@exception UnknownKeyTypeException key type unknown
    *@exception Exception other exceptions
    */
-  public abstract Tuple get_next() 
+  public abstract Tuple get_next()
     throws IOException,
 	   JoinsException ,
 	   IndexException,
 	   InvalidTupleSizeException,
-	   InvalidTypeException, 
+	   InvalidTypeException,
 	   PageNotReadException,
-	   TupleUtilsException, 
+	   TupleUtilsException,
 	   PredEvalException,
 	   SortException,
 	   LowMemException,
 	   UnknowAttrType,
 	   UnknownKeyTypeException,
 	   Exception;
+
 
   /**
    *@exception IOException I/O errors

@@ -53,6 +53,10 @@ public class FileScanMap extends MapIterator {
         map1 = new Map();
         this.combined = combined;
 
+        //If the combined flag is true, the constructor creates an array of five Heapfile objects called heapfiles,
+        // with each object representing one of the five partitions of the combined file.
+        // It then creates an array of five Scan objects called scans,
+        // with each object representing a scan over one of the five partitions.
         if(this.combined){
             try{
                 heapfiles = new Heapfile[5];
@@ -77,6 +81,8 @@ public class FileScanMap extends MapIterator {
             }
         }else{
             try {
+                //If the combined flag is false, the constructor creates a single Heapfile object called f that represents
+                // the file to be scanned. It then creates a Scan object called scan to scan over the file.
                 f = new Heapfile(file_name);
 
             } catch (Exception e) {

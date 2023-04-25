@@ -888,8 +888,8 @@ class HFDriver extends TestDriver implements GlobalConst {
 
 			if (status == OK)
 				System.out.println("  Test 6: Map record insertion completed successfully");
-			int read_counter = PCounter.rCounter;
-			int write_counter = PCounter.wCounter;
+			int read_counter = PCounter.getRCounter();
+			int write_counter = PCounter.getWCounter();
 			System.out.println("Read Counter: " + read_counter);
 			System.out.println("Write Counter: " + write_counter);
 		} catch (Exception e) {
@@ -1040,8 +1040,8 @@ class HFDriver extends TestDriver implements GlobalConst {
 
 		if (status == OK)
 			System.out.println("  Test 7 completed successfully.\n");
-		int read_counter = PCounter.rCounter;
-		int write_counter = PCounter.wCounter;
+		int read_counter = PCounter.getRCounter();
+		int write_counter = PCounter.getWCounter();
 		System.out.println("Read Counter: " + read_counter);
 		System.out.println("Write Counter: " + write_counter);
 		return status;
@@ -1549,7 +1549,7 @@ class DummyRecord {
 	 * constructor: translate a tuple to a DummyRecord object
 	 * it will make a copy of the data in the tuple
 	 *
-	 * @param atuple: the input tuple
+	 * @param : the input tuple
 	 */
 	public DummyRecord(Tuple _atuple)
 			throws java.io.IOException {

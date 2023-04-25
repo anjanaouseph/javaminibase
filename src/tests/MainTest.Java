@@ -1,8 +1,11 @@
 package tests;
 
-import BigT.*;
+import BigT.BatchInsert;
+import BigT.GetCounts;
+import BigT.Query;
+import BigT.bigt;
 import diskmgr.PCounter;
-import global.SystemDefs;
+import iterator.MapUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -95,6 +98,7 @@ class MainTest {
                         break;
                     case 2:
                         // query
+
                         System.out.println("FORMAT : query BIGTABLENAME ORDERTYPE ROWFILTER COLUMNFILTER VALUEFILTER NUMBUF");
                         input = getInput();
                         if (input != null && input.length == 7) {
@@ -106,7 +110,7 @@ class MainTest {
                         }
                         break;
                     case 3:
-                        //map insert
+                    //map insert
                         System.out.println("FORMAT : mapinsert RL CL VAL TS TYPE BIGTABLENAME NUMBUF");
                         input = getInput();
                         if (input != null && input.length == 8) {
@@ -116,7 +120,17 @@ class MainTest {
                             System.out.println("Improper input given. Try again !");
                         }
                         break;
-                    case 4:
+
+                    case 4: System.out.println("FORMAT : ROWJOIN BTNAME1 BTNAME2 OUTBTNAME COLUMNFILTER JOINTYPE NUMBUF");
+                        input = getInput();
+                        if (input != null && input.length == 7) {
+
+                            MapUtils.rowJoinWrapper(Integer.parseInt(input[6]),input[1],input[2],input[3],input[4],input[5]);
+                            } else {
+                            System.out.println("Improper input given. Try again !");
+                        }
+                        break;
+
                     case 5:
 
                             System.out.println("FORMAT: rowsort INBTNAME OUTBTNAME COLUMNNAME NUMBUF");
@@ -152,4 +166,4 @@ class MainTest {
             }
         }
     }
-    }
+}

@@ -1,12 +1,7 @@
 package iterator;
-
-
 import heap.*;
 import global.*;
 import bufmgr.*;
-import diskmgr.*;
-
-
 import java.lang.*;
 import java.io.*;
 
@@ -26,7 +21,6 @@ public class FileScan extends Iterator {
     private int nOutFlds;
     private CondExpr[] OutputFilter;
     public FldSpec[] perm_mat;
-
 
     /**
      * constructor

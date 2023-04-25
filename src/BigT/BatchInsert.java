@@ -3,17 +3,12 @@ package BigT;
 import diskmgr.PCounter;
 import global.MID;
 import global.SystemDefs;
-import heap.Heapfile;
-import index.MapIndexScan;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,7 +46,7 @@ public class BatchInsert {
 
             if (SystemDefs.JavabaseDB == null) {
                 // Initialize the data base.
-                String dbpath = "/tmp/"+ bigTableName + "_" + type  + ".minibase-db";
+                String dbpath = "/tmp/"+ bigTableName+ ".minibase-db";
                 SystemDefs sysdef = new SystemDefs( dbpath, 1000000, numbuf*5, "Clock" );
             }
 

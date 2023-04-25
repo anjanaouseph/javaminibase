@@ -1,9 +1,10 @@
 package iterator;
 
 import BigT.*;
+import diskmgr.PCounter;
 import global.AttrType;
+import global.SystemDefs;
 import heap.FieldNumberOutOfBoundException;
-import heap.Tuple;
 
 import java.io.IOException;
 
@@ -221,7 +222,7 @@ public class MapUtils {
     /**
      * set up the Jtuple's attrtype, string size,field number for using join
      *
-     * @param Jtuple       reference to an actual tuple  - no memory has been malloced
+
      * @param res_attrs    attributes type of result tuple
      * @param in1          array of the attributes of the tuple (ok)
      * @param len_in1      num of attributes of in1
@@ -289,7 +290,7 @@ public class MapUtils {
     /**
      * set up the Jtuple's attrtype, string size,field number for using project
      *
-     * @param Jtuple       reference to an actual tuple  - no memory has been malloced
+     * //@param Jtuple       reference to an actual tuple  - no memory has been malloced
      * @param res_attrs    attributes type of result tuple
      * @param in1          array of the attributes of the tuple (ok)
      * @param len_in1      num of attributes of in1
@@ -345,5 +346,30 @@ public class MapUtils {
         }
         return res_str_sizes;
     }
+    public static void rowJoinWrapper(int numBuf, String btName1, String btName2, String outBtName, String columnFilter,String joinType)throws Exception {
+
+        rowJoin rj;
+
+        // Initialize the databases.
+        if(SystemDefs.JavabaseDB == null) {
+
+            String dbpath1 = "/tmp/" + btName1 + ".minibase-db";
+            SystemDefs sysdef1 = new SystemDefs(dbpath1, 1000000, numBuf * 5, "Clock");
+
+            String dbpath2 = "/tmp/" + btName2 + ".minibase-db";
+            SystemDefs sysdef2 = new SystemDefs(dbpath2, 1000000, numBuf * 5, "Clock");
+        }
+
+
+        PCounter.initialize();
+
+        Stream leftstream = new bigt(btName1).openStream(btName1, 1,"*", columnFilter, "*",numBuf);
+        rj = new rowJoin(20, leftstream, btName2, columnFilter, outBtName, btName1,joinType);
+
+        System.out.println("\n Query results => ");
+        new Query(outBtName, 1, "*", "*", "*", numBuf);
+
+    }
+
 
 }

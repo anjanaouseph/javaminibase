@@ -17,9 +17,9 @@ public class PCounter {
         wCounter++;
     }
 
-    public int getRCounter(){ return rCounter; }
+    public static int getRCounter(){ return rCounter; }
 
-    public int getWCounter(){
+    public static int getWCounter(){
         return wCounter;
     }
 }

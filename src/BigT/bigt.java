@@ -296,7 +296,7 @@ public class bigt {
                 indexFiles.get(4).insert(new StringKey(map.getColumnLabel() + "%" + map.getRowLabel()), mid);
                 break;
             case 5:
-                // Index type 4 - Index on row label and value.
+                // Index type 5 - Index on row label and value.
                 indexFiles.get(5).insert(new StringKey(map.getRowLabel() + "%" + map.getValue()), mid);
                 break;
         }
