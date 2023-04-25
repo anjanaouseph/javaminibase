@@ -42,8 +42,8 @@ public class rowJoin {
             SortMergeJoin();
 
         }else{
-            System.out.println("............You have chosen NestedLoopJoin...............");
-            System.out.println("............Implementing NestedLoopJoin...............");
+            System.out.println("............You have chosen CartesianJoin...............");
+            System.out.println("............Implementing CartesianJoin...............");
             cartesianJoin();
         }
     }

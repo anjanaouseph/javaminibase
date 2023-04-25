@@ -2,6 +2,7 @@ package BigT;
 
 import btree.*;
 import bufmgr.*;
+import diskmgr.PCounter;
 import global.*;
 import heap.*;
 import iterator.*;
@@ -67,6 +68,8 @@ public class RowSort{
         }
         sort.close();
         System.out.println("NUMBER OF MAPS IN OUTPUT BIGTABLE: " + resultTable.getMapCnt());
+        System.out.println("READ COUNT : " + PCounter.rCounter);
+        System.out.println("WRITE COUNT : " + PCounter.wCounter);
 
         rows.deleteFileMap();
         filterRows.deleteFileMap();

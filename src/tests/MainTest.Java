@@ -5,6 +5,7 @@ import BigT.GetCounts;
 import BigT.Query;
 import BigT.bigt;
 import diskmgr.PCounter;
+import global.SystemDefs;
 import iterator.MapUtils;
 
 import java.io.BufferedReader;
@@ -121,10 +122,11 @@ class MainTest {
                         }
                         break;
 
-                    case 4: System.out.println("FORMAT : ROWJOIN BTNAME1 BTNAME2 OUTBTNAME COLUMNFILTER JOINTYPE NUMBUF");
+                    case 4:
+                        //Row Join
+                        System.out.println("FORMAT : ROWJOIN BTNAME1 BTNAME2 OUTBTNAME COLUMNFILTER JOINTYPE NUMBUF");
                         input = getInput();
                         if (input != null && input.length == 7) {
-
                             MapUtils.rowJoinWrapper(Integer.parseInt(input[6]),input[1],input[2],input[3],input[4],input[5]);
                             } else {
                             System.out.println("Improper input given. Try again !");
@@ -132,7 +134,7 @@ class MainTest {
                         break;
 
                     case 5:
-
+                            //Row Sort
                             System.out.println("FORMAT: rowsort INBTNAME OUTBTNAME COLUMNNAME NUMBUF");
                             input = getInput();
                         if (input != null && input.length == 5) {
@@ -144,6 +146,7 @@ class MainTest {
                         }
                         break;
                     case 6:
+                        //Get Counts
                         System.out.println("FORMAT : getCounts BIGTABLENAME NUMBUF");
                         input = getInput();
                         if (input != null && input.length == 3) {

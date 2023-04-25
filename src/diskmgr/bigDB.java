@@ -11,6 +11,8 @@ public class bigDB implements GlobalConst {
 
 
     private static final int bits_per_page = MAX_SPACE * 8;
+    public static PCounter pcounter;
+
 
 
     /**

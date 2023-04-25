@@ -18,7 +18,6 @@ import java.io.IOException;
 public class MapInsert {
 
     public MapInsert(String rowLabel, String colLabel, String value, int timestamp, int type, String bigTableName, int numbuf) throws IteratorException, HashEntryNotFoundException, ConstructPageException, GetFileEntryException, PinPageException, InvalidFrameNumberException, IOException, UnpinPageException, FreePageException, AddFileEntryException, HFDiskMgrException, HFException, HFBufMgrException, PageUnpinnedException, DeleteFileEntryException, ReplacerException, InvalidTupleSizeException, SpaceNotAvailableException, FieldNumberOutOfBoundException, InvalidSlotNumberException, DeleteRecException, KeyTooLongException, ConvertException, InsertException, IndexInsertRecException, LeafDeleteException, KeyNotMatchException, NodeNotMatchException, LeafInsertRecException, IndexSearchException, LeafRedistributeException, RecordNotFoundException, InsertRecException, IndexException, UnknownKeyTypeException, DeleteFashionException, UnknownIndexTypeException, RedistributeException, InvalidTypeException, IndexFullDeleteException {
-        // TODO: Bring up db from files if it is the case.
         if (SystemDefs.JavabaseDB == null) {
             // Initialize the data base.
             String dbpath = "/tmp/"+ bigTableName + "_" + type  + ".minibase-db";
