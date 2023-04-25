@@ -1,9 +1,6 @@
 package tests;
 
-import BigT.BatchInsert;
-import BigT.GetCounts;
-import BigT.Query;
-import BigT.bigt;
+import BigT.*;
 import diskmgr.PCounter;
 import global.SystemDefs;
 import iterator.MapUtils;
