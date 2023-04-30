@@ -4,6 +4,7 @@ import global.MID;
 import heap.Heapfile;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class rowJoin {
     private String columnName;
@@ -37,19 +38,19 @@ public class rowJoin {
 
         if(this.JoinType.equalsIgnoreCase("1")) {
 
-            System.out.println("............You have chosen SortMergeJoin...............");
-            System.out.println("............Implementing SortMergeJoin...............");
-            SortMergeJoin();
+            System.out.println("............You have chosen NestedLoop Join...............");
+            System.out.println("............Implementing NestedLoop Join...............");
+            NestedLoopJoin();
 
         }else{
-            System.out.println("............You have chosen CartesianJoin...............");
-            System.out.println("............Implementing CartesianJoin...............");
-            cartesianJoin();
+            System.out.println("............You have chosen IndexNestedLoopJoin...............");
+            System.out.println("............Implementing IndexNestedLoopJoin...............");
+            IndexNestedLoopJoin();
         }
     }
 
 
-    public void SortMergeJoin() throws Exception {
+    public void NestedLoopJoin() throws Exception {
 
         Heapfile heapfile = new Heapfile(this.outBigTName+"_1");
         if(heapfile.getRecCntMap() != 0)//if heapfile has records in it
@@ -138,10 +139,9 @@ public class rowJoin {
                 exception.printStackTrace();
             }
         }
+    public void IndexNestedLoopJoin() throws Exception {
 
-    public void cartesianJoin() throws Exception {
-
-        Heapfile heapfile = new Heapfile(this.outBigTName);
+        Heapfile heapfile = new Heapfile(this.outBigTName+"_1");
         if(heapfile.getRecCntMap() != 0)//if heapfile has records in it
         {
             heapfile.deleteFileMap();//then delete that heapfile
@@ -150,54 +150,56 @@ public class rowJoin {
         try {
 
             ArrayList<Map> outerRelation = new ArrayList<>();
-            ArrayList<Map> innerRelation = new ArrayList<>();
 
-            Map map3 = leftStream.getNext();
-            while (map3 != null) {
-                Map newMap = new Map(map3); // Create a new map object with the same entries as map3
-                outerRelation.add(newMap); // Add the new map object to the list
-                map3 = leftStream.getNext(); // Get the next map from the stream
+            Map outerRow = leftStream.getNext();
+            while (outerRow != null) {
+                outerRelation.add(outerRow);
+                outerRow = leftStream.getNext();
             }
             leftStream.closestream();
 
-            Map map4 = rightStream.getNext();
-            while (map4 != null) {
-                Map newMap = new Map(map4); // Create a new map object with the same entries as map3
-                innerRelation.add(newMap);
-                map4 = rightStream.getNext();
-            }
+            bigt table = new bigt(this.outBigTName, 1);
 
-            rightStream.closestream();
+            for (Map outer : outerRelation) {
 
-            if( outerRelation.isEmpty() || innerRelation.isEmpty()) {
+                bigt rightTable = new bigt(this.rightBigTName, 1);
+                Stream rightStream = rightTable.openStream(this.rightBigTName, 1, "*", this.columnName, outer.getValue(), this.amtOfMem);
 
-                bigt table = new bigt(this.outBigTName, 1);//create new
-            }
-            else {
+                Map innerRow = rightStream.getNext();
+                while (innerRow != null) {
 
-                bigt table = new bigt(this.outBigTName, 1);
-
-                for (Map outerRow : outerRelation) {
-
-                    for (Map innerRow : innerRelation) {
-
+                    if (outer.getTimeStamp() != innerRow.getTimeStamp()) {
                         Map map1 = new Map();
                         map1.setDefaultHdr();
-                        map1.setRowLabel(outerRow.getRowLabel() + ":" + innerRow.getRowLabel());
-                        map1.setColumnLabel(outerRow.getColumnLabel() + ":" + innerRow.getColumnLabel());
-                        map1.setTimeStamp(outerRow.getTimeStamp());
-                        map1.setValue(outerRow.getValue());
+                        map1.setRowLabel(outer.getRowLabel() + ":" + innerRow.getRowLabel());
+                        map1.setColumnLabel(outer.getColumnLabel());
+                        map1.setTimeStamp(outer.getTimeStamp());
+                        map1.setValue(outer.getValue());
+
+                        Map map2 = new Map();
+                        map2.setDefaultHdr();
+                        map2.setRowLabel(outer.getRowLabel() + ":" + innerRow.getRowLabel());
+                        map2.setColumnLabel(outer.getColumnLabel());
+                        map2.setTimeStamp(innerRow.getTimeStamp());
+                        map2.setValue(outer.getValue());
 
                         MID mid1 = table.insertMap(map1, 1);
-                        table.insertIndex(mid1, map1, 0);
 
+                        MID mid2 = table.insertMap(map2, 1);
+                        table.insertIndex(mid2, map2, 0);
                     }
+
+                    innerRow = rightStream.getNext();
                 }
 
+                rightStream.closestream();
             }
+
+            int noDuplicateRecordCount = table.deleteDuplicateRecords();
 
         } catch (Exception exception) {
             exception.printStackTrace();
         }
     }
+
 }

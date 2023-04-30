@@ -23,7 +23,7 @@ class MainTest {
         System.out.println("Press 4 for RowJoin");
         System.out.println("Press 5 for RowSort");
         System.out.println("Press 6 for getCounts");
-        System.out.println("Press 7 for other options");
+        System.out.println("Press 7 for CreateIndex");
         System.out.println("Press 8 to quit");
         System.out.println("------------------------ BigTable Tests --------------------------");
     }

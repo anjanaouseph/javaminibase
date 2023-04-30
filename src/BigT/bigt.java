@@ -252,7 +252,7 @@ public class bigt {
                         Map.DEFAULT_ROW_LABEL_ATTRIBUTE_SIZE + Map.DEFAULT_STRING_ATTRIBUTE_SIZE + 5, DeleteFashion.NAIVE_DELETE);
                 break;
             case 5:
-                // Index type 4 - Index on row label and value.
+                // Index type 5 - Index on row label and value.
                 tempIndex = new BTreeFile(indexName1, AttrType.attrString,
                         Map.DEFAULT_ROW_LABEL_ATTRIBUTE_SIZE + Map.DEFAULT_STRING_ATTRIBUTE_SIZE + 5, DeleteFashion.NAIVE_DELETE);
                 break;
