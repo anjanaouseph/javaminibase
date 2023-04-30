@@ -21,8 +21,8 @@ public class bigt {
     public BTreeFile utilityIndex = null;
     public Heapfile hf=null;
     public String indexUtil;
-    private AttrType[] attrType;
-    private FldSpec[] projlist;
+    public AttrType[] attrType;
+    public FldSpec[] projlist;
     private CondExpr[] expr;
     MapIndexScanBigT index_scan;
     private int insertType;

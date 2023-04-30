@@ -24,7 +24,7 @@ public class BatchInsert {
     public BatchInsert(String datafile, int type,  String bigTableName, int numbuf) {
         System.out.println("Starting to read from the data file : " + datafile);
         System.out.println("Index type : " + type);
-        System.out.println("Table name : " + bigTableName + "_" + type);
+        System.out.println("Table name : " + bigTableName);
         System.out.println("Number of buffers : " + numbuf);
 
 
@@ -102,6 +102,10 @@ public class BatchInsert {
             }
 
             int noDuplicateRecordCount = table.deleteDuplicateRecords();
+
+            for (int i=2; i <=5; i++) {
+                table.indexFiles.get(i).close();
+            }
 
             // Stats
             System.out.println("TOTAL RECORDS READ FROM THE FILE : " + recordNum);

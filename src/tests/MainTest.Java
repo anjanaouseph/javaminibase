@@ -23,7 +23,7 @@ class MainTest {
         System.out.println("Press 4 for RowJoin");
         System.out.println("Press 5 for RowSort");
         System.out.println("Press 6 for getCounts");
-        System.out.println("Press 7 for other options");
+        System.out.println("Press 7 for CreateIndex");
         System.out.println("Press 8 to quit");
         System.out.println("------------------------ BigTable Tests --------------------------");
     }
@@ -154,8 +154,11 @@ class MainTest {
                         }
                         break;
                     case 7:
-                        System.out.println("This feature is not yet implemented !");
-                        System.out.println("Please choose again!!");
+                        // Create Index
+                        System.out.println("FORMAT: createindex BTNAME TYPE");
+                        input = getInput();
+                        PCounter.initialize();
+                        new CreateIndex(input[1], Integer.parseInt(input[2]));
                 }
             } catch (Exception exception) {
                 exception.printStackTrace();
