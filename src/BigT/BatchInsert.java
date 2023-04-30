@@ -29,20 +29,6 @@ public class BatchInsert {
 
 
         try {
-            // Checking if the DB is already created.
-//            if (SystemDefs.JavabaseDB == null) {
-//                // Initialize the data base.
-//                String dbpath = "/tmp/"+ bigTableName + "_" + type  + ".minibase-db";
-//                try {
-//                    // DB exists.
-//                    Paths.get(dbpath);
-//                    SystemDefs.MINIBASE_RESTART_FLAG = true;
-//                    SystemDefs sysdef = new SystemDefs( dbpath, 1000000, numbuf, "Clock" );
-//                } catch (InvalidPathException exception) {
-//                    // The db does not exist.
-//                    SystemDefs sysdef = new SystemDefs( dbpath, 1000000, numbuf, "Clock" );
-//                }
-//            }
 
             if (SystemDefs.JavabaseDB == null) {
                 // Initialize the data base.
